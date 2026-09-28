@@ -1,0 +1,225 @@
+body, p, span, a, li, label, input, textarea, select, button {
+  font-size: max(16px, 1em) !important;
+}
+
+.edit-contact-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 1000;
+  transition: opacity 200ms ease, visibility 200ms;
+  opacity: 1;
+  visibility: visible;
+}
+
+.edit-contact-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.edit-contact-container {
+  width: 1200px;
+  max-width: 100%;
+  height: 600px;
+  background: white;
+  border-radius: 30px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.add-contact-container {
+  animation: slideInFromRight 300ms ease-out;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.edit-contact-left {
+  width: 460px;
+  flex-shrink: 0;
+  background: #2a3647;
+  color: white;
+  padding: 50px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logo {
+  width: 62px;
+  height: 76px;
+  margin-bottom: 28px;
+}
+
+.edit-contact-left h2,
+.add-contact-title {
+  font-size: 50px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.add-contact-subtitle {
+  font-size: 22px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.blue-line,
+.blue-line-add {
+  width: 112px;
+  height: 3px;
+  background: #29ABE2;
+}
+
+.edit-contact-right {
+  flex: 1;
+  min-width: 0;
+  padding: 50px 60px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  font-size: 40px !important;
+  line-height: 1;
+  cursor: pointer;
+  color: #2a3647;
+  z-index: 10;
+  padding: 8px 12px;
+}
+
+.profile-circle,
+.profile-circle-add {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: #ffcc00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 45px;
+  color: white;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.profile-circle-add {
+  background-color: #a8a8a8;
+}
+
+.icon-profile {
+  width: 62px;
+  height: 62px;
+}
+
+.edit-form {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.vacation-row {
+  display: flex;
+  gap: 14px;
+}
+
+.vacation-row .input-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+.vacation-row input {
+  padding-right: 18px;
+}
+
+.edit-form input {
+  width: 100%;
+  height: 56px;
+  padding: 12px 50px 12px 18px;
+  border: 1px solid #d1d1d1;
+  border-radius: 10px;
+  font-size: 18px;
+  background: white;
+}
+
+.input-wrapper .icon {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  display: flex;
+}
+
+.input-wrapper .icon img {
+  width: 24px;
+  height: 24px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 18px;
+  margin-top: 10px;
+}
+
+.delete-btn,
+.save-btn {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+}
+
+.delete-btn {
+  background: white;
+  border: 1px solid #2a3647;
+  color: #2a3647;
+}
+
+.delete-btn:hover {
+  border-color: #29ABE2;
+  color: #29ABE2;
+}
+
+.save-btn {
+  background: #2a3647;
+  color: white;
+}
+
+.save-btn:hover {
+  background: #29ABE2;
+}

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Legal Notice</title>
+    <link rel="stylesheet" href="./styles/globalStyles.css" />
+    <link rel="stylesheet" href="./styles/LegalNotice.css" />
+    <script type="module" src="./js/profilePopup.js"></script>
+    <script src="./js/firebase.js" type="module"></script>
+    <script type="module" src="./js/userInterface.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="./assets/favicon/logoFavicon.png"
+    />
+  </head>
+
+  <body>
+    <nav class="sideBoard">
+      <img
+        src="./assets/sideboardAssets/joinLogo.svg"
+        class="join-logo"
+        alt="join logo"
+      />
+      <div class="navLeftTop">
+        <a href="summaryUser.html" class="nav-item-top">
+          <img src="./assets/sideboardAssets/summary.svg" alt="Summary" />
+          <span class="sidebar-span">Summary</span>
+        </a>
+        <a href="addTask.html" class="nav-item-top">
+          <img src="./assets/sideboardAssets/addTask.svg" alt="Add Task" />
+          <span>Add Task</span>
+        </a>
+        <a href="board.html" class="nav-item-top">
+          <img src="./assets/sideboardAssets/board.svg" alt="Board" />
+          <span>Board</span>
+        </a>
+        <a href="contacts.html" class="nav-item-top">
+          <img src="./assets/sideboardAssets/contacts.svg" alt="Contacts" />
+          <span>Contacts</span>
+        </a>
+      </div>
+      <div class="navLeftBottom">
+        <a href="privacyPolicyInt.html" class="nav-item-bottom"
+          >Privacy Policy</a
+        >
+        <a href="legalNoticeInt.html" class="active-link">Legal notice</a>
+      </div>
+    </nav>
+
+    <header class="header">
+      <img
+        src="./assets/LogIn&SignUp/Capa3.svg"
+        class="header-logo-small d-none"
+        alt="Join Logo Small"
+      />
+      <span class="header-title">Kanban Project Management Tool</span>
+      <div class="headerRight">
+        <a href="./help.html" aria-label="Help"><div class="help"></div></a>
+        <button class="userProfileInitials" id="userProfileInitialsBtn">
+          <div class="nameInitials" id="nameInitials"></div>
+        </button>
+        <div id="profileShowMore" class="profileShowMore d-none"></div>
+      </div>
+    </header>
+
+    <main class="main-content-legal">
+      <div class="legal-title-container">
+        <h1 class="h1">Legal Notice</h1>
+        <img
+          src="./assets/utilitys/arrowBack.svg"
+          class="h1-arrow"
+          alt="Back"
+        />
+      </div>
+
+      <section class="legal-section">
+        <h2>Imprint</h2>
+        <ul class="legal-bullets">
+          <li>Julian Khoudraji</li>
+          <li>Maurice Stemmert</li>
+          <li>Dominik Schöller</li>
+          <li>Developer Akademie – Web Development Bootcamp</li>
+          <li>Cohort 2024 / 2025</li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h3>Contact</h3>
+        <p class="legal-meta">
+          Email: <a href="mailto:[EMAIL_ADDRESS]">[EMAIL_ADDRESS]</a>
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h3>Acceptance of terms</h3>
+        <p class="legal-p">
+          By accessing and using <span>Join</span>, you agree to these terms,
+          applicable policies, and future updates. We may adjust these terms
+          when needed to keep the product secure and maintainable.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h3>Scope and ownership of the product</h3>
+        <p class="legal-p">
+          <span>Join</span> was created as part of a student web development
+          project. It is intended for educational use and is not provided as a
+          commercial service.
+        </p>
+        <p class="legal-p">
+          The visual design and training materials are owned by
+          <span>Developer Akademie GmbH</span>. Reproduction or distribution
+          without permission is not allowed.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h3>Proprietary rights</h3>
+        <p class="legal-p">
+          The student project team retains rights to the implemented project
+          code and project-specific content unless stated otherwise.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h3>Permitted use</h3>
+        <p class="legal-p">
+          <span>Join</span> may only be used for lawful purposes. Misuse, abuse,
+          harassment, or attempts to damage the platform are prohibited.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h3>Disclaimer and limitation of liability</h3>
+        <p class="legal-p">
+          The product is provided "as is" without warranties. We are not liable
+          for indirect or consequential damages, data loss, downtime, or
+          business interruption resulting from use of this educational project.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h3>Indemnity</h3>
+        <p class="legal-p">
+          You agree to indemnify the student project team and
+          <span>Developer Akademie GmbH</span> against claims arising from
+          unlawful use of <span>Join</span> or breaches of these terms.
+        </p>
+        <p class="legal-p">Last updated: March 9, 2026</p>
+      </section>
+    </main>
+
+    <nav class="mobile-nav">
+      <a href="summaryUser.html">
+        <img src="./assets/sideboardAssets/summary.svg" alt="" /><br />Summary
+      </a>
+      <a href="addTask.html">
+        <img src="./assets/sideboardAssets/addTask.svg" alt="" /><br />Add Task
+      </a>
+      <a href="board.html">
+        <img src="./assets/sideboardAssets/board.svg" alt="" /><br />Board
+      </a>
+      <a href="contacts.html">
+        <img src="./assets/sideboardAssets/contacts.svg" alt="" /><br />Contacts
+      </a>
+    </nav>
+  </body>
+</html>

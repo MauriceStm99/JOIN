@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contacts</title>
+    <link rel="stylesheet" href="./styles/globalStyles.css" />
+    <link rel="stylesheet" href="./styles/contacts.css" />
+    <link rel="stylesheet" href="./styles/editContact.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/x-icon" href="./assets/favicon/logoFavicon.png" />
+    <script src="./js/firebase.js" type="module"></script>
+    <script type="module" src="./js/userInterface.js"></script>
+    <script type="module" src="./js/contacts.js" defer></script>
+    <script type="module" src="./js/profilePopup.js"></script>
+  </head>
+
+  <body>
+    <nav class="sideBoard">
+      <img src="./assets/sideboardAssets/joinLogo.svg" class="join-logo mobile-logo" alt="join logo" />
+
+      <div class="navLeftTop">
+        <a href="summaryUser.html" class="nav-item-top">
+          <img src="./assets/sideboardAssets/summary.svg" alt="Summary" />
+          <span>Summary</span>
+        </a>
+        <a href="addTask.html" class="nav-item-top">
+          <img src="./assets/sideboardAssets/addTask.svg" alt="Add Task" />
+          <span>Add Task</span>
+        </a>
+        <a href="board.html" class="nav-item-top">
+          <img src="./assets/sideboardAssets/board.svg" alt="Board" />
+          <span>Board</span>
+        </a>
+        <a href="contacts.html" class="active-link">
+          <img src="./assets/sideboardAssets/contacts.svg" alt="Contacts" />
+          <span>Contacts</span>
+        </a>
+      </div>
+
+      <div class="navLeftBottom">
+        <a href="privacyPolicyInt.html" class="nav-item-bottom">Privacy Policy</a>
+        <a href="legalNoticeInt.html" class="nav-item-bottom">Legal notice</a>
+      </div>
+    </nav>
+
+    <header class="header">
+      <img src="./assets/LogIn&SignUp/Capa3.svg" class="header-logo-small" alt="Join Logo Small" />
+      <span class="header-title">Kanban Project Management Tool</span>
+      <div class="headerRight">
+        <a href="./help.html" aria-label="Help"><div class="help"></div></a>
+        <button class="userProfileInitials" id="userProfileInitialsBtn">
+          <div class="nameInitials" id="nameInitials"></div>
+        </button>
+        <div id="profileShowMore" class="profileShowMore d-none"></div>
+      </div>
+    </header>
+
+    <main class="main-content-contacts">
+      <div class="contacts-container">
+        <div class="contacts-left">
+          <div class="contacts-left-header">
+            <button class="btn-add-contact" id="addContactBtn" type="button">
+              Add new contact
+              <img src="./assets/contacts/person_add.svg" alt="Add contact" />
+            </button>
+          </div>
+
+          <div class="contacts-list" id="contactsList"></div>
+        </div>
+
+        <div class="contacts-right">
+          <h1>
+            Contacts <span class="divider"></span>
+            <span class="subtitle">Better with a team</span>
+          </h1>
+          <div class="contact-details-overlay" id="contactDetailsOverlay"></div>
+        </div>
+      </div>
+      <div id="addContact"></div>
+    </main>
+
+    <nav class="mobile-nav">
+      <a href="summaryUser.html">
+        <img src="./assets/sideboardAssets/summary.svg" alt="" /><br />Summary
+      </a>
+      <a href="addTask.html">
+        <img src="./assets/sideboardAssets/addTask.svg" alt="" /><br />Add Task
+      </a>
+      <a href="board.html">
+        <img src="./assets/sideboardAssets/board.svg" alt="" /><br />Board
+      </a>
+      <a href="contacts.html">
+        <img src="./assets/sideboardAssets/contacts.svg" alt="" /><br />Contacts
+      </a>
+    </nav>
+
+    <button class="fab-add-contact" id="addContactMobileBtn" type="button">
+      <img src="./assets/contacts/person_add.svg" alt="Add Contact" />
+    </button>
+  </body>
+</html>

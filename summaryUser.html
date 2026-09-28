@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summary User</title>
+  <link rel="stylesheet" href="./styles/globalStyles.css">
+  <link rel="stylesheet" href="./styles/summaryUser.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="./js/firebase.js" type="module"></script>
+  <script type="module" src="./js/userInterface.js"></script>
+  <script type="module" src="./js/summaryUser.js" defer></script>
+  <script type="module" src="./js/profilePopup.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="./assets/favicon/logoFavicon.png">
+</head>
+
+<body>
+  <nav class="sideBoard">
+    <img src="./assets/sideboardAssets/joinLogo.svg" class="join-logo" alt="join logo">
+    <div class="navLeftTop">
+      <a href="summaryUser.html" class="active-link">
+        <img src="./assets/sideboardAssets/summary.svg" alt="Summary">
+        <span class="sidebar-span">Summary</span>
+      </a>
+
+      <a href="addTask.html" class="nav-item-top">
+        <img src="./assets/sideboardAssets/addTask.svg" alt="Add Task">
+        <span>Add Task</span>
+      </a>
+
+      <a href="board.html" class="nav-item-top">
+        <img src="./assets/sideboardAssets/board.svg" alt="Board">
+        <span>Board</span>
+      </a>
+
+      <a href="contacts.html" class="nav-item-top">
+        <img src="./assets/sideboardAssets/contacts.svg" alt="Contacts">
+        <span>Contacts</span>
+      </a>
+    </div>
+    <div class="navLeftBottom">
+      <a href="privacyPolicyInt.html" class="nav-item-bottom">Privacy Policy</a>
+      <a href="legalNoticeInt.html" class="nav-item-bottom">Legal notice</a>
+    </div>
+  </nav>
+
+  <header class="header">
+    <img src="./assets/LogIn&SignUp/Capa3.svg" class="header-logo-small" alt="Join Logo Small" />
+    <span class="header-title">Kanban Project Management Tool</span>
+    <div class="headerRight">
+      <a class="help" href="./help.html" aria-label="Help">
+        <div class="help"></div>
+      </a>
+      <button class="userProfileInitials" id="userProfileInitialsBtn">
+        <div class="nameInitials" id="nameInitials"></div>
+      </button>
+      <div id="profileShowMore" class="profileShowMore d-none"></div>
+    </div>
+  </header>
+
+  <div id="splash-screen" class="below-header">Good morning!</div>
+  <div id="summary-content">
+    <main class="main-content-summary">
+      <div id="mobile-intro" class="mobile-intro" style="display:none;">
+        <h1>Good Morning</h1>
+      </div>
+      <section class="summary-header-row">
+        <h1 class="summary-title">Join 360</h1>
+        <div class="summary-subtitle-row">
+          <div class="summary-divider-vertical"></div>
+          <span class="summary-subtitle">Key Metrics at a Glance</span>
+        </div>
+      </section>
+      <section class="summary-content-row">
+        <div class="summary-metrics">
+          <div class="summary-metrics-row-1">
+            <a href="./board.html">
+              <div class="summary-metric-tile-row-1 summary-metric-horizontal" style="--scale-origin: top left;">
+                <div class="summary-metric-icon summary-metric-todo">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <mask id="mask0_todo" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="32"
+                      height="32">
+                      <rect width="32" height="32" fill="#D9D9D9" />
+                    </mask>
+                    <g mask="url(#mask0_todo)">
+                      <path
+                        d="M6.66667 25.3332H8.53333L20.0333 13.8332L18.1667 11.9665L6.66667 23.4665V25.3332ZM25.7333 11.8998L20.0667 6.29984L21.9333 4.43317C22.4444 3.92206 23.0722 3.6665 23.8167 3.6665C24.5611 3.6665 25.1889 3.92206 25.7 4.43317L27.5667 6.29984C28.0778 6.81095 28.3444 7.42761 28.3667 8.14984C28.3889 8.87206 28.1444 9.48873 27.6333 9.99984L25.7333 11.8998ZM23.8 13.8665L9.66667 27.9998H4V22.3332L18.1333 8.19984L23.8 13.8665Z"
+                        fill="white" />
+                    </g>
+                  </svg>
+                </div>
+                <div class="summary-metric-info">
+                  <div class="summary-metric-value" id="summaryUserToDoCount">-</div>
+                  <div class="summary-metric-label">To-do</div>
+                </div>
+              </div>
+            </a>
+            <a href="./board.html" class="summary-metric-link">
+              <div class="summary-metric-tile-row-1 summary-metric-horizontal" style="--scale-origin: top right;">
+                <div class="summary-metric-icon summary-metric-done">
+                  <svg width="32" height="32" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <mask id="mask0_done" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="32"
+                      height="32">
+                      <rect width="32" height="32" fill="#D9D9D9" />
+                    </mask>
+                    <g mask="url(#mask0_done)">
+                      <path
+                        d="M5.288 8.775L13.763 0.3C13.963 0.1 14.2005 0 14.4755 0C14.7505 0 14.988 0.1 15.188 0.3C15.388 0.5 15.488 0.7375 15.488 1.0125C15.488 1.2875 15.388 1.525 15.188 1.725L5.988 10.925C5.788 11.125 5.55467 11.225 5.288 11.225C5.02133 11.225 4.788 11.125 4.588 10.925L0.288 6.625C0.088 6.425 -0.00783333 6.1875 0.0005 5.9125C0.00883333 5.6375 0.113 5.4 0.313 5.2C0.513 5 0.7505 4.9 1.0255 4.9C1.3005 4.9 1.538 5 1.738 5.2L5.288 8.775Z"
+                        fill="white" />
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="summary-metric-info">
+                  <div class="summary-metric-value" id="summaryUserDoneCount">-</div>
+                  <div class="summary-metric-label">Done</div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="summary-metrics-row-2">
+            <a href="./board.html" class="summary-metric-link">
+              <div class="summary-metric-tile-row-2 summary-metric-wide" style="--scale-origin: center;">
+                <div class="summary-metric-urgent">
+                  <div class="summary-metric-icon summary-metric-urgent-icon">
+                    <svg width="35" height="26" viewBox="0 0 35 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M32.3128 25.1162C31.9118 25.1169 31.5211 24.9873 31.1982 24.7465L17.093 14.2167L2.98773 24.7465C2.78971 24.8947 2.56479 25.0019 2.32583 25.062C2.08687 25.1222 1.83854 25.1341 1.59502 25.0971C1.3515 25.0602 1.11755 24.975 0.906549 24.8466C0.695544 24.7181 0.511607 24.5489 0.365241 24.3485C0.218876 24.1481 0.112947 23.9205 0.0535029 23.6787C-0.00594092 23.4369 -0.0177355 23.1856 0.0187927 22.9391C0.0925645 22.4415 0.358687 21.9938 0.758615 21.6947L15.9784 10.3213C16.301 10.0796 16.6917 9.94922 17.093 9.94922C17.4943 9.94922 17.885 10.0796 18.2075 10.3213L33.4274 21.6947C33.7452 21.9317 33.9808 22.2642 34.1007 22.6448C34.2207 23.0254 34.2187 23.4347 34.0951 23.8141C33.9715 24.1935 33.7326 24.5237 33.4125 24.7575C33.0925 24.9913 32.7076 25.1169 32.3128 25.1162Z"
+                        fill="white" />
+                      <path
+                        d="M32.3127 15.1645C31.9116 15.1652 31.521 15.0357 31.1981 14.7949L17.0929 4.265L2.98762 14.7949C2.58769 15.094 2.08671 15.2201 1.5949 15.1455C1.10309 15.0708 0.660727 14.8015 0.365127 14.3968C0.0695279 13.9921 -0.0550935 13.4852 0.0186784 12.9875C0.0924502 12.4898 0.358572 12.0421 0.758501 11.743L15.9783 0.36961C16.3009 0.127979 16.6916 -0.00244141 17.0929 -0.00244141C17.4942 -0.00244141 17.8849 0.127979 18.2074 0.36961L33.4272 11.743C33.745 11.98 33.9807 12.3126 34.1006 12.6932C34.2205 13.0738 34.2186 13.483 34.095 13.8624C33.9714 14.2418 33.7325 14.572 33.4124 14.8058C33.0924 15.0397 32.7075 15.1652 32.3127 15.1645Z"
+                        fill="white" />
+                    </svg>
+                  </div>
+                  <div class="summary-metric-info summary-metric-label">
+                    <div class="summary-metric-value" id="summaryUserUrgentCount">-</div>
+                    <div class="summary-metric-urgent-label">Urgent</div>
+                  </div>
+                </div>
+                <div class="summary-metric-divider"></div>
+                <div class="summary-metric-deadline">
+                  <div class="summary-metric-deadline-date" id="summaryUserUrgentDate">-</div>
+                  <div class="summary-metric-deadline-label">Upcoming Deadline</div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="summary-metrics-row-3">
+            <a href="./board.html" class="summary-metric-link">
+              <div class="summary-metric-tile-row-3" style="--scale-origin: bottom left;">
+                <div class="summary-metric-value" id="summaryAllTasksOnBoardCount">-</div>
+                <div class="summary-metric-label">Tasks in <br>Board</div>
+              </div>
+            </a>
+            <a href="./board.html" class="summary-metric-link">
+              <div class="summary-metric-tile-row-3" style="--scale-origin: bottom center;">
+                <div class="summary-metric-value" id="summaryUserInProgressCount">-</div>
+                <div class="summary-metric-label">Tasks In <br>Progress</div>
+              </div>
+            </a>
+            <a href="./board.html" class="summary-metric-link">
+              <div class="summary-metric-tile-row-3" style="--scale-origin: bottom right;">
+                <div class="summary-metric-value" id="summaryUserAwaitFeedbackCount">-</div>
+                <div class="summary-metric-label">Awaiting <br>Feedback</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="summary-greeting">
+          <div class="summary-greeting-text">Good morning!</div>
+          <div class="summary-greeting-user" id="shownUsernameOnSummary"></div>
+        </div>
+      </section>
+    </main>
+
+
+  </div>
+  <nav class="mobile-nav">
+    <a href="summaryUser.html">
+      <img src="./assets/sideboardAssets/summary.svg" alt="" /><br />Summary
+    </a>
+    <a href="addTask.html">
+      <img src="./assets/sideboardAssets/addTask.svg" alt="" /><br />Add Task
+    </a>
+    <a href="board.html">
+      <img src="./assets/sideboardAssets/board.svg" alt="" /><br />Board
+    </a>
+    <a href="contacts.html">
+      <img src="./assets/sideboardAssets/contacts.svg" alt="" /><br />Contacts
+    </a>
+  </nav>
+</body>
+
+</html>
