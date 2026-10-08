@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy Internal</title>
+    <link rel="stylesheet" href="../../styles/globalStyles.css">
+    <link rel="stylesheet" href="../../styles/legal/legalNotice.css">
+    <script type="module" src="../../js/ui/profilePopup.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script type="module" src="../../js/ui/userInterface.js"></script>
+    <script src="../../js/core/firebase.js" type="module"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../../assets/favicon/logoFavicon.png">
+</head>
+
+<body>
+    <nav class="sideBoard">
+        <img src="../../assets/sideboardAssets/joinLogo.svg" class="join-logo" alt="join logo">
+        <div class="navLeftTop">
+            <a href="../app/summaryUser.html" class="nav-item-top">
+                <img src="../../assets/sideboardAssets/summary.svg" alt="Summary">
+                <span>Summary</span>
+            </a>
+
+            <a href="../app/addTask.html" class="nav-item-top">
+                <img src="../../assets/sideboardAssets/addTask.svg" alt="Add Task">
+                <span>Add Task</span>
+            </a>
+
+            <a href="../app/board.html" class="nav-item-top">
+                <img src="../../assets/sideboardAssets/board.svg" alt="Board">
+                <span>Board</span>
+            </a>
+
+            <a href="../app/contacts.html" class="nav-item-top">
+                <img src="../../assets/sideboardAssets/contacts.svg" alt="Contacts">
+                <span>Contacts</span>
+            </a>
+        </div>
+        <div class="navLeftBottom">
+            <a href="privacyPolicyInt.html" class="active-link">Privacy Policy</a>
+            <a href="legalNoticeInt.html" class="nav-item-bottom">Legal notice</a>
+        </div>
+    </nav>
+    <header class="header">
+        <img src="../../assets/LogIn&SignUp/Capa3.svg" class="header-logo-small d-none" alt="Join Logo Small">
+      
+        <span class="header-title">Kanban Project Management Tool</span>
+        <div class="headerRight">
+          <a href="../app/help.html" aria-label="Help">
+            <div class="help"></div>
+          </a>
+      
+          <button class="userProfileInitials" id="userProfileInitialsBtn">
+            <div class="nameInitials" id="nameInitials"></div>
+          </button>
+          <div id="profileShowMore" class="profileShowMore d-none"></div>
+        </div>
+      </header>
+    <main class="main-content-legal">
+        <div class="legal-title-container">
+            <h1 class="h1">Privacy Policy</h1>
+            <img src="../../assets/utilitys/arrowBack.svg" class="h1-arrow" alt="Arrow">
+          </div>
+        <h2>Overview</h2>
+        <p class="legal-p">
+            This Privacy Policy describes how <span>Join</span> collects, uses, and stores personal data.
+            Join is a student project developed as part of a web development bootcamp at the Developer Akademie.
+            It is not a commercial service.
+        </p>
+
+        <h2>Data We Collect</h2>
+        <p class="legal-p">When you register or use <span>Join</span>, we may collect the following data:</p>
+        <ul class="legal-bullets">
+            <li>Your name and email address (provided during registration)</li>
+            <li>Your password (stored securely via Firebase Authentication – never in plain text)</li>
+            <li>Tasks, contacts, and project data you create within the application</li>
+            <li>Technical usage data (e.g. timestamps for created/updated records)</li>
+        </ul>
+
+        <h2>How We Use Your Data</h2>
+        <p class="legal-p">Your data is used exclusively to operate the <span>Join</span> application:</p>
+        <ul class="legal-bullets">
+            <li>To authenticate you and display your personalized dashboard</li>
+            <li>To store and retrieve your tasks and contacts from our database</li>
+            <li>To assign tasks to team members within the same project</li>
+        </ul>
+        <p class="legal-p">We do not sell, share, or transfer your data to third parties.</p>
+
+        <h2>Data Storage</h2>
+        <p class="legal-p">
+            All data is stored in <span>Google Firebase</span> (Firestore Database and Firebase Authentication),
+            hosted within the European Union or the United States depending on Firebase configuration.
+            Firebase is compliant with GDPR where applicable.
+        </p>
+
+        <h2>Your Rights</h2>
+        <p class="legal-p">You have the right to:</p>
+        <ul class="legal-bullets">
+            <li>Request access to the personal data we hold about you</li>
+            <li>Request correction or deletion of your data</li>
+            <li>Withdraw your consent at any time by deleting your account</li>
+        </ul>
+        <p class="legal-p">
+            To exercise these rights, please contact us via the email listed in the Legal Notice.
+        </p>
+
+        <h2>Cookies &amp; Tracking</h2>
+        <p class="legal-p">
+            <span>Join</span> does not use tracking cookies or analytics tools. Firebase may use
+            technical cookies required for authentication sessions.
+        </p>
+
+        <h2>Changes to This Policy</h2>
+        <p class="legal-p">
+            This privacy policy may be updated as the project evolves. The date of the last update
+            is noted below. Continued use of <span>Join</span> after changes constitutes acceptance
+            of the updated policy.
+        </p>
+        <p class="legal-p">Last updated: May 6, 2026</p>
+
+    </main>
+    <nav class="mobile-nav">
+        <a href="../app/summaryUser.html">
+          <img src="../../assets/sideboardAssets/summary.svg" alt=""><br>Summary
+        </a>
+        <a href="../app/addTask.html">
+          <img src="../../assets/sideboardAssets/addTask.svg" alt=""><br>Add Task
+        </a>
+        <a href="../app/board.html">
+          <img src="../../assets/sideboardAssets/board.svg" alt=""><br>Board
+        </a>
+        <a href="../app/contacts.html">
+          <img src="../../assets/sideboardAssets/contacts.svg" alt=""><br>Contacts
+        </a>
+      </nav>
+</body>
+
+</html>
+
+

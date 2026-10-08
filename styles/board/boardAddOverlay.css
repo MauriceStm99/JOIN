@@ -1,0 +1,552 @@
+.overlay-add-task-card {
+    background-color: #fff;
+    border-radius: 30px;
+    padding: 70px 65px 65px 75px;
+    width: 1120px;
+    height: 880px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideInRight 0.2s ease-out;
+}
+
+.overlay-edit.closing .overlay-add-task-card {
+    animation: slideOutRight 0.2s ease-out forwards;
+}
+
+.add-task-title {
+    font-size: 61px !important;
+    margin: 0 !important;
+    margin-bottom: 32px !important;
+}
+
+.add-task-form-overlay {
+    display: flex;
+    gap: 60px;
+    margin-bottom: 32px;
+}
+
+.form-column-left,
+.form-column-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex: 1;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 20px;
+    font-weight: 400;
+    color: #2A3647;
+}
+
+.required {
+    color: #FF0000;
+}
+
+.required-text {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-start;
+    margin-top: 8px;
+    font-size: 16px;
+}
+
+.form-input,
+.form-textarea {
+    padding: 12px 16px;
+    border: 1px solid #D1D1D1;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    transition: border-color 0.2s ease;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: rgba(209, 209, 209, 1);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #29ABE2;
+    box-shadow: 0 0 3px rgba(0, 102, 255, 0.2);
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-divider {
+    width: 2px;
+    height: 440px;
+    border-radius: 2px;
+    background: rgba(209, 209, 209, 0.5);
+}
+
+.priority-button-group {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.priority-button {
+    flex: 1;
+    min-width: 0;
+    height: 56px;
+    padding: 20px 0;
+    gap: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0px 0px 4px 0px #0000001A;
+    color: #2A3647;
+    font-size: 20px;
+    font-weight: 400;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.priority-button:hover {
+    box-shadow: 0px 4px 4px 0px #00000040;
+}
+
+.priority-button-icon-urgent {
+    fill: #FF3D00;
+}
+
+.priority-button-icon-medium {
+    fill: #FFA800;
+}
+
+.priority-button-icon-low {
+    fill: #7AE229;
+}
+
+.priority-button-urgent-active {
+    background: #FF3D00;
+    color: white;
+    box-shadow: none !important;
+}
+
+.priority-button-urgent-active .priority-icon {
+    fill: white;
+}
+
+.priority-button-medium-active {
+    background: #FFA800;
+    color: white;
+    box-shadow: none !important;
+}
+
+.priority-button-medium-active .priority-icon {
+    fill: white;
+}
+
+.priority-button-low-active {
+    background: #7AE229;
+    color: white;
+    box-shadow: none !important;
+}
+
+.priority-button-low-active .priority-icon {
+    fill: white;
+}
+
+.priority-button-icon-active {
+    fill: white;
+}
+
+.multi-select-overlay {
+    position: relative;
+}
+
+.select-arrow {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232a3647' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.select-arrow:hover {
+    background-color: var(--gray-default);
+}
+
+.multi-select-overlay.open .select-arrow {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+#overlayCategory {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    padding-right: 40px;
+    width: 100%;
+}
+
+#overlayCategory::-ms-expand {
+    display: none;
+}
+
+.selected-box {
+    padding: 12px 40px 12px 16px;
+    border: 1px solid #D1D1D1;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: border-color 0.2s ease;
+}
+
+.selected-box:hover {
+    border-color: #0066ff;
+}
+
+.checkbox-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #D1D1D1;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 12px;
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.checkbox-list.active {
+    display: block;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 8px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.checkbox-item:hover {
+    background-color: var(--lightGray-default);
+}
+
+.checkbox-item:has(.assignedToCheckbox:checked) {
+    background-color: var(--mainColor-default);
+    color: white;
+}
+
+.checkbox-item input[type="checkbox"] {
+    cursor: pointer;
+    accent-color: #0066ff;
+}
+
+.assignedToCheckbox {
+    width: 20px;
+    height: 20px;
+}
+
+.checkbox-item .assignedToCheckboxNameIcon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.subtask-input-area {
+    position: relative;
+    width: 100%;
+}
+
+.subtask-input-area #overlaySubtask {
+    width: 100%;
+    padding-right: 72px;
+}
+
+.subtask-buttons {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.subtask-add-button-size,
+.subtask-remove-button-size {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.subtask-btn {
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2A3647;
+    transition: color 0.2s ease;
+}
+
+.subtask-btn:hover {
+    color: #0066ff;
+}
+
+.divider-line {
+    width: 2px;
+    height: 24px;
+    background-color: #D1D1D1;
+}
+
+.subtasks-list {
+    min-height: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.subtask-item-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.subtask-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    pointer-events: auto;
+    border-radius: 8px;
+    padding: 4px 8px;
+    transition: background-color 0.15s ease;
+}
+
+.subtask-label:hover {
+    background-color: #E9E9E9;
+}
+
+.subtask-label span,
+.subtask-label button,
+.subtask-label input[type="checkbox"] {
+    pointer-events: auto;
+}
+
+.subtask-label-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.subtask-label .point {
+    height: 8px;
+    width: 8px;
+    background-color: var(--mainColor-default);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.edit-delete-subtask-buttons {
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.subtask-label:hover .edit-delete-subtask-buttons {
+    opacity: 1;
+}
+
+.edit-subtask-button-size,
+.delete-subtask-button-size {
+    background: transparent;
+    border: 0;
+    padding: 4px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.edit-subtask-button-size:hover,
+.delete-subtask-button-size:hover {
+    transform: scale(1.15);
+}
+
+.edit-delete-subtask-buttons img {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.subtask-remove-btn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.subtask-remove-btn:hover {
+    color: #FF0000;
+}
+
+.add-task-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    position: sticky;
+    bottom: 0;
+    background-color: #fff;
+    padding: 16px 0;
+    z-index: 5;
+}
+
+.add-task-actions .cancel-create-buttons {
+    margin-left: auto;
+}
+
+.cancel-create-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.btn-cancel {
+    height: 56px;
+    padding: 16px;
+    border: 1px solid #D1D1D1;
+    background-color: #f5f5f5;
+    color: #2A3647;
+    border-radius: 8px;
+    font-size: 21px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+    background-color: #efefef;
+}
+
+.btn-create {
+    height: 56px;
+    padding: 16px;
+    border: none;
+    background-color: #2A3647;
+    color: white;
+    border-radius: 8px;
+    font-size: 21px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+.btn-create:hover {
+    background-color: #29ABE2;
+}
+
+.technical-task {
+    background-color: #1FD7C1;
+}
+
+.user-story {
+    background-color: #0038FF;
+}
+
+.priority-urgent {
+    background: url(../../assets/board/priority-high.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    fill: red;
+    width: 20px;
+    height: 20px;
+}
+
+.priority-medium {
+    background: url(../../assets/board/priority-medium.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    fill: orange;
+}
+
+.priority-low {
+    background: url(../../assets/board/priority-low.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    fill: green;
+    width: 20px;
+    height: 20px;
+}
+
+
+.required-hint {
+    font-size: 16px;
+    color: #f26262;
+    min-height: 18px;
+    line-height: 1.2;
+    visibility: hidden;
+}
+
+.required-hint.show {
+    visibility: visible;
+}
+
+.assigned-icons {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.assigned-icons .assigned-more-badge {
+    background-color: var(--mainColor-default);
+    cursor: pointer;
+    padding: 0;
+}

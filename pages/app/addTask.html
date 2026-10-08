@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="../../assets/favicon/logoFavicon.png" />
+    <script type="module" src="../../js/core/firebase.js"></script>
+    <script type="module" src="../../js/ui/userInterface.js" defer></script>
+    <script type="module" src="../../js/addTask/addTask.js" defer></script>
+    <script type="module" src="../../js/addTask/addTaskPriorityButtons.js" defer></script>
+<link rel="stylesheet" href="../../styles/globalStyles.css" />
+    <link rel="stylesheet" href="../../styles/addTask/addTask.css" />
+    <title>Add Task</title>
+    <script type="module" src="../../js/ui/profilePopup.js" defer></script>
+  </head>
+
+  <body>
+    <nav class="sideBoard">
+      <img
+        src="../../assets/sideboardAssets/joinLogo.svg"
+        class="join-logo"
+        alt="join logo"
+      />
+      <div class="navLeftTop">
+        <a href="summaryUser.html" class="nav-item-top">
+          <img src="../../assets/sideboardAssets/summary.svg" alt="Summary" />
+          <span class="sidebar-span">Summary</span>
+        </a>
+
+        <a href="addTask.html" class="active-link">
+          <img src="../../assets/sideboardAssets/addTask.svg" alt="Add Task" />
+          <span>Add Task</span>
+        </a>
+
+        <a href="board.html" class="nav-item-top">
+          <img src="../../assets/sideboardAssets/board.svg" alt="Board" />
+          <span>Board</span>
+        </a>
+
+        <a href="contacts.html" class="nav-item-top">
+          <img src="../../assets/sideboardAssets/contacts.svg" alt="Contacts" />
+          <span>Contacts</span>
+        </a>
+      </div>
+
+      <div class="navLeftBottom">
+        <a href="../legal/privacyPolicyInt.html" class="nav-item-bottom"
+          >Privacy Policy</a
+        >
+        <a href="../legal/legalNoticeInt.html" class="nav-item-bottom">Legal notice</a>
+      </div>
+    </nav>
+
+    <header class="header">
+      <img
+        src="../../assets/LogIn&SignUp/Capa3.svg"
+        class="header-logo-small"
+        alt="Join Logo Small"
+      />
+      <span class="header-title">Kanban Project Management Tool</span>
+      <div class="headerRight">
+        <a href="./help.html" aria-label="Help"><div class="help"></div></a>
+        <button class="userProfileInitials" id="userProfileInitialsBtn">
+          <div class="nameInitials" id="nameInitials"></div>
+        </button>
+        <div id="profileShowMore" class="profileShowMore d-none"></div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="add-task-wrapper">
+        <h1>Add Task</h1>
+
+        <form class="add-task-form" autocomplete="off" novalidate>
+          <div class="task-column">
+            <label for="taskTitle">Title<span>*</span></label>
+            <input
+              class="task-input"
+              type="text"
+              id="taskTitle"
+              placeholder="Enter a title" maxlength="80"
+
+            />
+            <p class="required-hint" id="taskTitleHint">*This field is required</p>
+
+            <label for="taskDescription">Description</label>
+            <textarea
+              class="task-input-description task-input"
+              id="taskDescription"
+              placeholder="Enter a Description" maxlength="500"
+            ></textarea>
+
+            <label for="taskDate">Due date<span>*</span></label>
+            <input class="task-input" type="date" id="taskDate" />
+
+            <p class="required-hint" id="taskDateHint">*This field is required</p>
+          </div>
+
+          <div class="task-column">
+            <label>Priority</label>
+            <div class="priority-buttons">
+              <button class="priority-btn priority-urgent" id="priorityUrgentBtn" type="button">
+                <span>Urgent</span>
+                <svg class="priority-icon" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M1.5 8L10.5 1L19.5 8" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M1.5 15L10.5 8L19.5 15" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button class="priority-btn priority-medium" id="priorityMediumBtn" type="button">
+                <span>Medium</span>
+                <svg class="priority-icon" viewBox="0 0 21 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M1.5 2H19.5" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M1.5 10H19.5" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <button class="priority-btn priority-low" id="priorityLowBtn" type="button">
+                <span>Low</span>
+                <svg class="priority-icon" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M1.5 1L10.5 8L19.5 1" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M1.5 8L10.5 15L19.5 8" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="assigned-area" id="assignedArea">
+              <label for="selectedBox">Assigned to</label>
+
+              <div class="multi-select">
+                <input class="selected-box task-input" id="selectedBox" placeholder=" Select contacts to assign" maxlength="120" />
+                <span class="select-arrow" id="selectedBoxArrow" aria-hidden="true"></span>
+                <div
+                  class="checkbox-list"
+                  id="chooseContactsCheckboxList"
+                ></div>
+              </div>
+              <div class="assignedIcons" id="assignedIcons"></div>
+            </div>
+            <label for="categorySelect">Category<span>*</span></label>
+            <div class="multi-select category-select">
+              <input class="selected-box task-input" id="categorySelect" placeholder="Select task category" readonly />
+              <span class="select-arrow" id="categoryArrow" aria-hidden="true"></span>
+              <div class="checkbox-list" id="categoryOptionsList"></div>
+            </div>
+            <p class="required-hint" id="categoryHint">*This field is required</p>
+            <label for="subtasks">Subtasks</label>
+            <div class="subtask-input-area">
+              <input
+                class="task-input"
+                type="text"
+                id="subtasks"
+                placeholder="Add new subtask" maxlength="120"
+              />
+              <div class="subtask-buttons">
+                <button
+                  class="remove-background subtask-btn"
+                  id="addSubtaskBtn"
+                >
+                  <img
+                    class="subtask-add-button-size"
+                    src="../../assets/utilitys/check.svg"
+                    alt="add subtask button"
+                  />
+                </button>
+                <div class="dividing-line"></div>
+                <button
+                  class="remove-background subtask-btn"
+                  id="removeSubtaskBtn"
+                >
+                  <img
+                    class="subtask-remove-button-size"
+                    src="../../assets/utilitys/close.svg"
+                    alt="remove subtask button"
+                  />
+                </button>
+              </div>
+            </div>
+            <div class="subtasks-list" id="subtasksList"></div>
+            <span class="required-note required-note-mobile"><span>*</span>This field is required</span>
+          </div>
+        </form>
+
+        <div class="add-task-buttons">
+          <span class="required-note"><span>*</span>This field is required</span>
+          <button class="task-action-btn" id="cancelTaskBtn" type="button" aria-label="Clear">
+            <img src="../../assets/addTask/Clear.svg" alt="Clear" class="btn-img-default">
+            <img src="../../assets/addTask/Clear-hover.svg" alt="" aria-hidden="true" class="btn-img-hover">
+          </button>
+          <button class="task-action-btn" id="addTaskBtn" type="button" aria-label="Create Task">
+            <img src="../../assets/addTask/Primary check button.svg" alt="Create Task" class="btn-img-default">
+            <img src="../../assets/addTask/Primary check button-hover.svg" alt="" aria-hidden="true" class="btn-img-hover">
+          </button>
+        </div>
+      </div>
+    </main>
+    <nav class="mobile-nav">
+      <a href="summaryUser.html">
+        <img src="../../assets/sideboardAssets/summary.svg" alt="" /><br />Summary
+      </a>
+      <a href="addTask.html">
+        <img src="../../assets/sideboardAssets/addTask.svg" alt="" /><br />Add Task
+      </a>
+      <a href="board.html">
+        <img src="../../assets/sideboardAssets/board.svg" alt="" /><br />Board
+      </a>
+      <a href="contacts.html">
+        <img src="../../assets/sideboardAssets/contacts.svg" alt="" /><br />Contacts
+      </a>
+    </nav>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+

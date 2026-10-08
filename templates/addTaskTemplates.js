@@ -1,4 +1,4 @@
-import { escapeHtml } from "../js/utility.js";
+import { escapeHtml } from "../js/core/utility.js";
 
 export function addAssignedToBarTask(name,uid,iconTemplate) {  
     const safeName = escapeHtml(name);
@@ -18,20 +18,20 @@ export function addSubTask(subtaskString){
    </div>
    <div class="edit-delete-subtask-buttons">
    <button type="button" class="edit-subtask-button-size subtask-btn" aria-label="Edit subtask">
-   <img src="./assets/contacts/editButton.svg" alt="">
+   <img src="../../assets/contacts/editButton.svg" alt="">
    </button>
    <div class="dividing-line"></div>
    <button type="button" class="delete-subtask-button-size subtask-btn" aria-label="Delete subtask">
-   <img src="./assets/contacts/deleteButton.svg" alt="">
+   <img src="../../assets/contacts/deleteButton.svg" alt="">
    </button>
    </div>
    <div class="edit-mode-buttons">
    <button type="button" class="cancel-subtask-button-size subtask-btn" aria-label="Cancel edit">
-   <img src="./assets/utilitys/close.svg" alt="Cancel">
+   <img src="../../assets/utilitys/close.svg" alt="Cancel">
    </button>
    <div class="dividing-line"></div>
    <button type="button" class="confirm-subtask-button-size subtask-btn" aria-label="Confirm edit">
-   <img src="./assets/utilitys/check.svg" alt="Confirm">
+   <img src="../../assets/utilitys/check.svg" alt="Confirm">
    </button>
    </div>
    </div>`;

@@ -1,0 +1,316 @@
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(150%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(150%);
+    }
+}
+
+.overlay-edit {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.overlay-edit.active {
+    display: flex;
+}
+
+body:has(.overlay-edit.active) {
+    overflow: hidden;
+}
+
+.overlay-detail-card {
+    background-color: #fff;
+    border-radius: 30px;
+    width: 520px;
+    height: auto;
+    max-height: 92vh;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideInRight 0.2s ease-out;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.overlay-detail-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 40px 40px 20px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.overlay-detail-card.no-animation {
+    animation: none !important;
+}
+
+.overlay-edit.closing .overlay-detail-card.no-animation {
+    animation: slideOutRight 0.2s ease-out forwards;
+}
+
+.overlay-edit.closing .overlay-detail-card {
+    animation: slideOutRight 0.2s ease-out forwards;
+}
+
+.overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.task-category-overlay {
+    display: inline-block;
+    max-width: max-content;
+    padding: 4px 18px;
+    color: white;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.card-detail-technical-task {
+    background-color: #1FD7C1;
+}
+
+.card-detail-user-story {
+    background-color: #0038FF;
+}
+
+
+.overlay-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    transition: opacity 0.2s ease;
+    background-color: transparent;
+    border-radius: 50%;
+}
+
+.overlay-close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.overlay-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 16px 0;
+    line-height: 1.1;
+    margin-bottom: 24px;
+}
+
+.overlay-description {
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+    color: #000000;
+    margin-bottom: 24px;
+    line-height: 1.4;
+}
+
+.date-and-priority-section {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 24px;
+}
+
+.overlay-field-label {
+    display: flex;
+    flex-direction: column;
+    font-size: 18px;
+    font-weight: 400;
+    color: #000000;
+    gap: 20px;
+}
+
+.overlay-field-content {
+    display: flex;
+    flex-direction: column;
+    font-size: 18px;
+    font-weight: 400;
+    color: #000000;
+    margin-left: 24px;
+    gap: 20px;
+}
+
+.overlay-label {
+    display: block;
+    font-size: 18px;
+    font-weight: 400;
+    color: #000000;
+    margin-bottom: 12px;
+}
+
+.overlay-priority {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.overlay-priority .priority-icon-image {
+    width: 17px;
+    height: 12px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.overlay-assignees {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.overlay-assignee-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: 8px;
+}
+
+.overlay-assignee-item .assignee-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.overlay-assignee-item span {
+    font-size: 18px;
+    font-weight: 400;
+    color: #000000;
+}
+
+.overlay-subtasks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.overlay-subtask-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: 8px;
+}
+
+.overlay-subtask-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #0066ff;
+}
+
+.overlay-subtask-item label {
+    font-size: 16px;
+    font-weight: 400;
+    color: #000000;
+    cursor: pointer;
+    margin: 0;
+}
+
+.overlay-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 40px 24px 40px;
+    border-top: none;
+    background: #FFFFFF;
+    flex-shrink: 0;
+}
+
+.btn-delete {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 28px;
+    padding: 2px 0;
+    color: #2A3647;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: color 0.1s ease, fill 0.1s ease;
+    fill: #2A3647;
+}
+
+.btn-delete:hover {
+    color: #29ABE2;
+    fill: #29ABE2;
+}
+
+.btn-edit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 28px;
+    padding: 2px 0;
+    color: #2A3647;
+    font-size: 16px;
+    font-weight: 400;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: color 0.1s ease, fill 0.1s ease;
+    fill: #2A3647;
+}
+
+.btn-edit:hover {
+    color: #29ABE2;
+    fill: #29ABE2;
+}
+
+.action-btn-divider {
+    width: 1px;
+    height: 18px;
+    border-radius: 2px;
+    background: #DCDCDC;
+    align-self: center;
+}
+
+.action-btn-icon {
+    margin-right: 0;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+

@@ -1,10 +1,10 @@
-import { escapeHtml, sanitizeColor } from "../js/utility.js";
+import { escapeHtml, sanitizeColor } from "../js/core/utility.js";
 
 export const addContactTemplate = `
 <div class="edit-contact-overlay add-contact-overlay">
-  <div class="edit-contact-container add-contact-container" role="dialog" aria-modal="true" aria-label="Add contact">
+  <dialog class="edit-contact-container add-contact-container" open aria-label="Add contact">
     <div class="edit-contact-left">
-      <img src="./assets/sideboardAssets/joinLogo.svg" class="logo" alt="Join logo">
+      <img src="../../assets/sideboardAssets/joinLogo.svg" class="logo" alt="Join logo">
       <h2 class="add-contact-title">Add contact</h2>
       <h3 class="add-contact-subtitle">Tasks are better with a team!</h3>
       <div class="blue-line"></div>
@@ -13,23 +13,23 @@ export const addContactTemplate = `
     <div class="edit-contact-right">
       <button class="close-btn" id="closeAddContactBtn" type="button" aria-label="Close">&times;</button>
       <div class="profile-circle profile-circle-add">
-        <img src="./assets/LogIn&SignUp/person1.svg" class="icon-profile" alt="">
+        <img src="../../assets/LogIn&SignUp/person1.svg" class="icon-profile" alt="">
       </div>
 
       <form class="edit-form" novalidate>
         <div class="input-wrapper">
           <input type="text" id="AddContactNameInput" placeholder="Name" maxlength="50" autocomplete="off">
-          <span class="icon"><img src="./assets/LogIn&SignUp/person.svg" alt=""></span>
+          <span class="icon"><img src="../../assets/LogIn&SignUp/person.svg" alt=""></span>
         </div>
 
         <div class="input-wrapper">
           <input type="text" id="AddContactEmailInput" placeholder="Email" maxlength="120" autocomplete="off" inputmode="email">
-          <span class="icon"><img src="./assets/LogIn&SignUp/mail.svg" alt=""></span>
+          <span class="icon"><img src="../../assets/LogIn&SignUp/mail.svg" alt=""></span>
         </div>
 
         <div class="input-wrapper">
           <input type="text" id="AddContactPhoneNumberInput" placeholder="Phone" maxlength="30" autocomplete="off" inputmode="tel">
-          <span class="icon"><img src="./assets/LogIn&SignUp/call.svg" alt=""></span>
+          <span class="icon"><img src="../../assets/LogIn&SignUp/call.svg" alt=""></span>
         </div>
 
         <div class="vacation-row">
@@ -47,7 +47,7 @@ export const addContactTemplate = `
         </div>
       </form>
     </div>
-  </div>
+  </dialog>
 </div>
 `;
 
@@ -105,11 +105,11 @@ export function getContactDetailsTemplate(contact, color) {
       <h2 class="contact-name-large" id="contactNameLarge">${safeName}</h2>
       <div class="contact-buttons">
         <button class="edit-contact-btn contact-btn" id="editContactBtn" type="button">
-          <img src="./assets/contacts/editButton.svg" alt="Edit icon" class="edit-icon">
+          <img src="../../assets/contacts/editButton.svg" alt="Edit icon" class="edit-icon">
           Edit
         </button>
         <button class="delete-contact-details-btn contact-btn" id="deleteContactDetailsBtn" type="button">
-          <img src="./assets/contacts/deleteButton.svg" alt="Delete icon" class="delete-icon">
+          <img src="../../assets/contacts/deleteButton.svg" alt="Delete icon" class="delete-icon">
           Delete
         </button>
       </div>
@@ -145,9 +145,9 @@ export function editContactTemplate(name, email, phoneNumber, uuid, color, initi
 
   return `
 <div class="edit-contact-overlay">
-  <div class="edit-contact-container add-contact-container" data-contact-id="${safeUuid}" role="dialog" aria-modal="true" aria-label="Edit contact">
+  <dialog class="edit-contact-container add-contact-container" data-contact-id="${safeUuid}" open aria-label="Edit contact">
     <div class="edit-contact-left">
-      <img src="./assets/sideboardAssets/joinLogo.svg" class="logo" alt="Join logo">
+      <img src="../../assets/sideboardAssets/joinLogo.svg" class="logo" alt="Join logo">
       <h2 class="add-contact-title">Edit contact</h2>
       <div class="blue-line"></div>
     </div>
@@ -159,17 +159,17 @@ export function editContactTemplate(name, email, phoneNumber, uuid, color, initi
       <form class="edit-form" novalidate>
         <div class="input-wrapper">
           <input type="text" id="EditContactNameInput" placeholder="Name" value="${safeName}" maxlength="50" autocomplete="off">
-          <span class="icon"><img src="./assets/LogIn&SignUp/person.svg" alt=""></span>
+          <span class="icon"><img src="../../assets/LogIn&SignUp/person.svg" alt=""></span>
         </div>
 
         <div class="input-wrapper">
           <input type="text" id="EditContactEmailInput" placeholder="Mail" value="${safeEmail}" maxlength="120" autocomplete="off" inputmode="email">
-          <span class="icon"><img src="./assets/LogIn&SignUp/mail.svg" alt=""></span>
+          <span class="icon"><img src="../../assets/LogIn&SignUp/mail.svg" alt=""></span>
         </div>
 
         <div class="input-wrapper">
           <input type="text" id="EditContactPhoneNumberInput" placeholder="Phone Number" value="${safePhone}" maxlength="30" autocomplete="off" inputmode="tel">
-          <span class="icon"><img src="./assets/LogIn&SignUp/call.svg" alt=""></span>
+          <span class="icon"><img src="../../assets/LogIn&SignUp/call.svg" alt=""></span>
         </div>
 
         <div class="vacation-row">
@@ -187,7 +187,7 @@ export function editContactTemplate(name, email, phoneNumber, uuid, color, initi
         </div>
       </form>
     </div>
-  </div>
+  </dialog>
 </div>
 `;
 }

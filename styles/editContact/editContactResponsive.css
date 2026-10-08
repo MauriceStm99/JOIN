@@ -1,0 +1,91 @@
+@media (max-width: 1240px) {
+  .edit-contact-container {
+    flex-direction: column;
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+  }
+
+  .edit-contact-left {
+    width: 100%;
+    padding: 32px 24px 56px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .logo {
+    margin-bottom: 14px;
+  }
+
+  .edit-contact-right {
+    flex-direction: column;
+    padding: 0 24px 24px;
+    align-items: center;
+    gap: 16px;
+    margin-top: -40px;
+    position: static;
+  }
+
+  .profile-circle,
+  .profile-circle-add {
+    border: 3px solid white;
+  }
+
+  .edit-form {
+    width: 100%;
+  }
+
+  .close-btn {
+    color: white;
+    top: 14px;
+    right: 14px;
+  }
+
+  .buttons {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .edit-contact-overlay {
+    padding: 10px;
+  }
+
+  .edit-contact-container {
+    border-radius: 24px;
+  }
+
+  .edit-contact-left {
+    padding: 28px 16px 50px;
+  }
+
+  .edit-contact-left h2,
+  .add-contact-title {
+    font-size: 30px;
+  }
+
+  .add-contact-subtitle {
+    font-size: 16px;
+  }
+
+  .edit-contact-right {
+    padding: 0 16px 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .delete-btn,
+  .save-btn {
+    width: 100%;
+  }
+}
+
+body:has(.edit-contact-overlay) #addContactMobileBtn {
+  display: none !important;
+}
