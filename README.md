@@ -25,4 +25,3 @@ python3 -m http.server 8000
 
 Danach `http://localhost:8000` im Browser öffnen. Zum Ausprobieren reicht „Guest Log in“, über „Sign up“ kann man sich auch einen eigenen Account anlegen.
 
-Die Firebase-Konfiguration steht in `js/core/firebase.js`. Wer mit einer eigenen Datenbank arbeiten will, trägt dort die Daten seines eigenen Firebase-Projekts ein.

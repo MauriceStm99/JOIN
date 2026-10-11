@@ -1,4 +1,11 @@
-import { escapeHtml } from "./utility.js";
+import {
+  doc,
+  setDoc,
+  serverTimestamp,
+  collection,
+  getDocs,
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { db } from "./firebase.js";
 
 export const demoContacts = [
   {
@@ -111,3 +118,65 @@ export const demoTasks = [
     ]
   }
 ];
+
+let seedingPromise = null;
+
+/**
+ * Seeds the demo data once per page load if the database is empty.
+ * @returns {Promise<void>} Resolves when seeding is finished.
+ */
+export function seedDemoDataIfEmpty() {
+  if (!seedingPromise) seedingPromise = seedDemoData();
+  return seedingPromise;
+}
+
+/**
+ * Writes the demo contacts and tasks if there are no contacts and no tasks yet.
+ */
+async function seedDemoData() {
+  try {
+    if (!(await isDatabaseEmpty())) return;
+    await writeDemoContacts();
+    await writeDemoTasks();
+    console.log("Demo data successfully seeded to Firebase Firestore.");
+  } catch (error) {
+    console.error("Error seeding demo data:", error);
+  }
+}
+
+/**
+ * Checks whether there are neither contacts nor tasks in the database.
+ * @returns {Promise<boolean>} True if both collections are empty.
+ */
+async function isDatabaseEmpty() {
+  const contactsSnap = await getDocs(collection(db, "contacts"));
+  const tasksSnap = await getDocs(collection(db, "tasks"));
+  return contactsSnap.empty && tasksSnap.empty;
+}
+
+/**
+ * Writes all demo contacts.
+ */
+async function writeDemoContacts() {
+  for (const { id, ...contactData } of demoContacts) {
+    await setDoc(doc(db, "contacts", id), {
+      ...contactData,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+}
+
+/**
+ * Writes all demo tasks.
+ */
+async function writeDemoTasks() {
+  for (const { id, ...taskData } of demoTasks) {
+    await setDoc(doc(db, "tasks", id), {
+      ...taskData,
+      createdBy: "demo_user",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+}

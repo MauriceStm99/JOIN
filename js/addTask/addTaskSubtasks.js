@@ -1,160 +1,182 @@
 import { addSubTask } from "../../templates/addTaskTemplates.js";
+import { selectElementText } from "../core/utility.js";
 
+/**
+ * Makes the text of a subtask editable and selects it.
+ * @param {HTMLElement} subtaskElement - The subtask.
+ */
 function enableEditableSubtask(subtaskElement) {
   const textSpan = subtaskElement.querySelector("span");
   const pointDiv = subtaskElement.querySelector(".point");
-
   if (pointDiv) pointDiv.style.display = "none";
   if (textSpan) {
     textSpan.contentEditable = true;
     textSpan.focus();
   }
-
   subtaskElement.classList.add("subtask-label-active");
-
-  if (!textSpan) return;
-  const range = document.createRange();
-  range.selectNodeContents(textSpan);
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
+  if (textSpan) selectElementText(textSpan);
 }
 
+/**
+ * Ends the editing of a subtask.
+ * @param {HTMLElement} subtaskElement - The subtask.
+ */
 function disableEditableSubtask(subtaskElement) {
   const textSpan = subtaskElement.querySelector("span");
   const pointDiv = subtaskElement.querySelector(".point");
-
   if (pointDiv) pointDiv.style.display = "block";
   if (textSpan) textSpan.contentEditable = false;
   subtaskElement.classList.remove("subtask-label-active");
 }
 
+/**
+ * Starts editing a subtask and remembers its text for the cancel button.
+ * @param {HTMLElement} subtaskNode - The subtask.
+ */
 function startEditingSubtask(subtaskNode) {
   const textSpan = subtaskNode.querySelector("span");
   if (!textSpan) return;
-
   subtaskNode.dataset.originalText = textSpan.textContent.trim();
-
   enableEditableSubtask(subtaskNode);
+  watchSubtaskEditEnd(subtaskNode, textSpan);
+}
 
-  const closeEdit = () => {
+/**
+ * Ends the editing on a click outside of the subtask or on Enter.
+ * @param {HTMLElement} subtaskNode - The subtask.
+ * @param {HTMLElement} textSpan - Its editable text.
+ */
+function watchSubtaskEditEnd(subtaskNode, textSpan) {
+  /**
+   * Ends the editing and stops listening for outside clicks.
+   */
+  function closeEdit() {
     disableEditableSubtask(subtaskNode);
     document.removeEventListener("click", handleOutsideClick);
-  };
-
-  const handleOutsideClick = (event) => {
-    if (event.target.closest(".subtask-label") !== subtaskNode) {
-      closeEdit();
-    }
-  };
-
-  setTimeout(() => {
-    document.addEventListener("click", handleOutsideClick);
-  }, 0);
-
-  textSpan.addEventListener(
-    "keydown",
-    (event) => {
-      if (event.key !== "Enter") return;
-      event.preventDefault();
-      closeEdit();
-    },
-    { once: true }
-  );
+  }
+  /**
+   * Ends the editing when the click was outside of this subtask.
+   * @param {MouseEvent} event - The click event.
+   */
+  function handleOutsideClick(event) {
+    if (event.target.closest(".subtask-label") !== subtaskNode) closeEdit();
+  }
+  setTimeout(() => document.addEventListener("click", handleOutsideClick), 0);
+  textSpan.addEventListener("keydown", (event) => closeEditOnEnter(event, closeEdit), { once: true });
 }
 
-function wireInlineEditButtons(subtaskNode) {
-  const editBtn = subtaskNode.querySelector(".edit-subtask-button-size");
-  const deleteBtn = subtaskNode.querySelector(".delete-subtask-button-size");
-  const cancelBtn = subtaskNode.querySelector(".cancel-subtask-button-size");
-  const confirmBtn = subtaskNode.querySelector(".confirm-subtask-button-size");
+/**
+ * Calls closeEdit when Enter was pressed.
+ * @param {KeyboardEvent} event - The keydown event.
+ * @param {Function} closeEdit - Ends the editing.
+ */
+function closeEditOnEnter(event, closeEdit) {
+  if (event.key !== "Enter") return;
+  event.preventDefault();
+  closeEdit();
+}
+
+/**
+ * Connects a button inside a subtask, the click does not reach the form.
+ * @param {HTMLElement} subtaskNode - The subtask.
+ * @param {string} selector - Selector of the button.
+ * @param {Function} handler - Runs on click.
+ */
+export function onSubtaskButton(subtaskNode, selector, handler) {
+  subtaskNode.querySelector(selector)?.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    handler();
+  });
+}
+
+/**
+ * Restores the text from before the editing and ends it.
+ * @param {HTMLElement} subtaskNode - The subtask.
+ */
+function cancelSubtaskEdit(subtaskNode) {
   const textSpan = subtaskNode.querySelector("span");
-
-  if (editBtn) {
-    editBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      startEditingSubtask(subtaskNode);
-    });
+  if (textSpan && subtaskNode.dataset.originalText) {
+    textSpan.textContent = subtaskNode.dataset.originalText;
   }
-
-  if (deleteBtn) {
-    deleteBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      subtaskNode.remove();
-    });
-  }
-
-  if (cancelBtn) {
-    cancelBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (textSpan && subtaskNode.dataset.originalText) {
-        textSpan.textContent = subtaskNode.dataset.originalText;
-      }
-      disableEditableSubtask(subtaskNode);
-    });
-  }
-
-  if (confirmBtn) {
-    confirmBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      disableEditableSubtask(subtaskNode);
-    });
-  }
+  disableEditableSubtask(subtaskNode);
 }
 
+/**
+ * Connects the edit, delete, cancel and confirm buttons of a subtask.
+ * @param {HTMLElement} subtaskNode - The subtask.
+ */
+function wireInlineEditButtons(subtaskNode) {
+  onSubtaskButton(subtaskNode, ".edit-subtask-button-size", () => startEditingSubtask(subtaskNode));
+  onSubtaskButton(subtaskNode, ".delete-subtask-button-size", () => subtaskNode.remove());
+  onSubtaskButton(subtaskNode, ".cancel-subtask-button-size", () => cancelSubtaskEdit(subtaskNode));
+  onSubtaskButton(subtaskNode, ".confirm-subtask-button-size", () => disableEditableSubtask(subtaskNode));
+}
+
+/**
+ * Connects the buttons of a subtask and starts editing on double click.
+ * @param {HTMLElement} subtaskElement - The subtask.
+ */
 function addSubtaskEventListeners(subtaskElement) {
   wireInlineEditButtons(subtaskElement);
-
-  subtaskElement.addEventListener("dblclick", (e) => {
-    e.preventDefault();
+  subtaskElement.addEventListener("dblclick", (event) => {
+    event.preventDefault();
     startEditingSubtask(subtaskElement);
   });
 }
 
-export function initSubtaskEventListeners() {
-  const addSubtaskBtn = document.getElementById("addSubtaskBtn");
-  const removeSubtaskBtn = document.getElementById("removeSubtaskBtn");
-  const subtasksList = document.getElementById("subtasksList");
+/**
+ * Adds the text of the subtask field as a new subtask.
+ */
+function addSubtaskFromInput() {
   const subtaskInput = document.getElementById("subtasks");
+  const subtasksList = document.getElementById("subtasksList");
+  const subtaskText = subtaskInput.value.trim();
+  if (!subtaskText) return;
+  subtasksList.insertAdjacentHTML("beforeend", addSubTask(subtaskText));
+  addSubtaskEventListeners(subtasksList.lastElementChild);
+  subtaskInput.value = "";
+}
 
-  const addSubtaskFromInput = () => {
-    const subtaskText = subtaskInput.value.trim();
-    if (!subtaskText) return;
+/**
+ * Adds the subtask when Enter is pressed in the subtask field.
+ * @param {KeyboardEvent} event - The keydown event.
+ */
+function addSubtaskOnEnter(event) {
+  if (event.key !== "Enter") return;
+  event.preventDefault();
+  addSubtaskFromInput();
+}
 
-    subtasksList.insertAdjacentHTML("beforeend", addSubTask(subtaskText));
-    addSubtaskEventListeners(subtasksList.lastElementChild);
-    subtaskInput.value = "";
-  };
-
-  addSubtaskBtn.addEventListener("click", (e) => {
-    e.preventDefault();
+/**
+ * Connects the add and remove buttons and the Enter key of the subtask field.
+ */
+export function initSubtaskEventListeners() {
+  document.getElementById("addSubtaskBtn").addEventListener("click", (event) => {
+    event.preventDefault();
     addSubtaskFromInput();
   });
-
-  subtaskInput.addEventListener("keydown", (e) => {
-    if (e.key !== "Enter") return;
-    e.preventDefault();
-    addSubtaskFromInput();
-  });
-
-  removeSubtaskBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    subtasksList.lastElementChild?.remove();
+  document.getElementById("subtasks").addEventListener("keydown", addSubtaskOnEnter);
+  document.getElementById("removeSubtaskBtn").addEventListener("click", (event) => {
+    event.preventDefault();
+    document.getElementById("subtasksList").lastElementChild?.remove();
   });
 }
 
+/**
+ * Turns a subtask element into the object that is stored.
+ * @param {HTMLElement} span - Text element of the subtask.
+ * @returns {{text: string, completed: boolean}} The subtask.
+ */
+function toSubtask(span) {
+  const checkbox = span.querySelector('input[type="checkbox"]');
+  return { text: span.textContent.trim(), completed: checkbox ? checkbox.checked : false };
+}
+
+/**
+ * Reads all subtasks of the form.
+ * @returns {{text: string, completed: boolean}[]} The subtasks.
+ */
 export function getSubtasksList() {
-  const subtasks = [];
-  document.querySelectorAll("#subtasksList span").forEach((span) => {
-    const checkbox = span.querySelector('input[type="checkbox"]');
-    subtasks.push({
-      text: span.textContent.trim(),
-      completed: checkbox ? checkbox.checked : false,
-    });
-  });
-  return subtasks;
+  return [...document.querySelectorAll("#subtasksList span")].map(toSubtask);
 }

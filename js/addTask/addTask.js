@@ -1,22 +1,20 @@
-﻿import { getContacts, addEditTask, getContact } from "../core/firebase.js";
-import {
-  addAssignedToBarTask,
-} from "../../templates/addTaskTemplates.js";
-import {
-  getInitials,
-  getStoredCurrentUser,
-  initOutsideClickHandler,
-  returnContactById,
-} from "../core/utility.js";
+import { addEditTask } from "../firebase/firebaseTasks.js";
 import {
   applyContentLimits,
   initBlurValidation,
   validateTaskForm,
   resetAddTaskForm,
   initPriorityButtons,
+  toggleDropdown,
+  closeDropdown,
 } from "./addTaskFormHelpers.js";
 import { getSubtasksList, initSubtaskEventListeners } from "./addTaskSubtasks.js";
-import { iconTemplate } from "../../templates/profileTemplates.js";
+import {
+  loadAddTaskContacts,
+  initAssignedDropdown,
+  getSelectedAssignedTo,
+  resetAssignedContacts,
+} from "./addTaskContacts.js";
 import { showPopup, showBoardToast } from "../ui/feedback.js";
 
 const PRIORITY = Object.freeze({
@@ -24,329 +22,193 @@ const PRIORITY = Object.freeze({
   MEDIUM: "Medium",
   URGENT: "Urgent",
 });
-let selectedPriority = PRIORITY.MEDIUM;
-
-let priorityUrgentBtn;
-let priorityMediumBtn;
-let priorityLowBtn;
-let selectBox;
-let checkboxList;
-let contactsList = [];
-const selectedContactIds = new Set();
-
-document.addEventListener("DOMContentLoaded", async () => {
-    const dateInput = document.getElementById("taskDate");
-  if (dateInput) {
-    const today = new Date().toISOString().split("T")[0];
-    dateInput.min = today;
-  }
-  const form = document.querySelector(".add-task-form");
-  if (form) form.noValidate = true;
-  const addTaskBtn = document.getElementById("addTaskBtn");
-  const cancelTaskBtn = document.getElementById("cancelTaskBtn");
-
-  priorityUrgentBtn = document.getElementById("priorityUrgentBtn");
-  priorityMediumBtn = document.getElementById("priorityMediumBtn");
-  priorityLowBtn = document.getElementById("priorityLowBtn");
-  selectBox = document.getElementById("selectedBox");
-  checkboxList = document.getElementById("chooseContactsCheckboxList");
-
-  if (selectBox && checkboxList) {
-    const selectArrow = selectBox.closest(".multi-select")?.querySelector(".select-arrow");
-
-    const toggleCheckboxList = () => {
-      const wasVisible = checkboxList.style.display === "flex";
-      checkboxList.style.display = wasVisible ? "none" : "flex";
-      selectBox.closest(".multi-select")?.classList.toggle("open", !wasVisible);
-
-      if (!wasVisible) {
-        initOutsideClickHandler(
-          selectBox,
-          () => {
-            checkboxList.style.display = "none";
-            selectBox.closest(".multi-select")?.classList.remove("open");
-          },
-          [checkboxList, selectArrow].filter(Boolean)
-        );
-      }
-    };
-
-    selectBox.addEventListener("click", toggleCheckboxList);
-
-    selectArrow?.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleCheckboxList();
-    });
-
-    selectBox.addEventListener("input", () => {
-      const searchTerm = selectBox.value;
-
-      addContactsToAssignTask(contactsList, searchTerm);
-      checkCheckboxChanges();
-    });
-  }
-
-  initCategoryDropdown();
-
-  addTaskBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    if (!validateTaskForm({
-      getTitle: getTitleTask,
-      getDueDate: getDueDateTask,
-      getCategory: getCategoryTask,
-    })) {
-      return;
-    }
-    createTaskObject();
-  });
-  cancelTaskBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    resetTaskFormState();
-  });
-
-  applyContentLimits();
-  initBlurValidation({
-    getTitle: getTitleTask,
-    getDueDate: getDueDateTask,
-    getCategory: getCategoryTask,
-  });
-  addCategoryOptionsTask();
-  initSubtaskEventListeners();
-  initPriorityButtons({
-    lowBtn: priorityLowBtn,
-    mediumBtn: priorityMediumBtn,
-    urgentBtn: priorityUrgentBtn,
-    priorities: {
-      low: PRIORITY.LOW,
-      medium: PRIORITY.MEDIUM,
-      urgent: PRIORITY.URGENT,
-    },
-    setPriority: (value) => {
-      selectedPriority = value;
-    },
-  });
-  await loadAddTaskContacts();
-});
-
-async function loadAddTaskContacts() {
-  try {
-    contactsList = await getContacts();
-  } catch {
-    contactsList = [];
-    showPopup("Contacts could not be loaded right now.", "info");
-  }
-
-  addContactsToAssignTask(contactsList);
-  checkCheckboxChanges();
-}
-
-function addContactsToAssignTask(contacts, filterString = "") {
-  const assignedSelect = document.getElementById("chooseContactsCheckboxList");
-  if (!assignedSelect) return;
-
-  assignedSelect.innerHTML = "";
-
-  const filteredContacts = filterString.trim()
-    ? contacts.filter((contact) =>
-        contact?.name?.toLowerCase().includes(filterString.toLowerCase())
-      )
-    : contacts;
-
-  const currentUser = getStoredCurrentUser();
-  const sortedContacts = filteredContacts.sort((a, b) => {
-    if (currentUser && a.id === currentUser.uid) return -1;
-    if (currentUser && b.id === currentUser.uid) return 1;
-
-    return (a.name || "").localeCompare(b.name || "");
-  });
-
-  sortedContacts.forEach((contact) => {
-    if (!contact?.id || !contact?.name) return;
-    const isCurrentUser = currentUser && contact.id === currentUser.uid;
-    const displayName = isCurrentUser ? `${contact.name} (You)` : contact.name;
-
-    const option = addAssignedToBarTask(
-      displayName,
-      contact.id,
-      iconTemplate(
-        getInitials(contact.name),
-        contact.color,
-        "assignedToCheckboxIcon"
-      )
-    );
-
-    if (typeof option === "string") {
-      assignedSelect.insertAdjacentHTML("beforeend", option);
-    } else if (option instanceof Node) {
-      assignedSelect.appendChild(option);
-    } else {
-      return;
-    }
-  });
-
-  assignedSelect.querySelectorAll(".assignedToCheckbox").forEach((cb) => {
-    cb.checked = selectedContactIds.has(cb.value);
-  });
-
-  if (filteredContacts.length === 0) {
-    assignedSelect.innerHTML =
-      '<div class="no-results">No contacts found</div>';
-  }
-}
-
-function getTitleTask() {
-  const titleTask = document.getElementById("taskTitle").value;
-  return titleTask;
-}
-
-function getDescriptionTask() {
-  const descriptionTask = document.getElementById("taskDescription").value;
-  return descriptionTask;
-}
-
-function getDueDateTask() {
-  const dueDateTask = document.getElementById("taskDate").value;
-
-  return dueDateTask;
-}
-
-function getPriorityTask() {
-  return selectedPriority;
-}
-
-function checkCheckboxChanges() {
-  if (!checkboxList || !selectBox) return;
-  const checkboxes = checkboxList.querySelectorAll(".assignedToCheckbox");
-  const selectedNamesIconContainer = document.getElementById("assignedIcons");
-
-  checkboxes.forEach((cb) => {
-    cb.addEventListener("change", () => {
-      if (cb.checked) {
-        selectedContactIds.add(cb.value);
-      } else {
-        selectedContactIds.delete(cb.value);
-      }
-
-      updateAssignedIcons(selectedNamesIconContainer);
-    });
-  });
-}
-
-function updateAssignedIcons(container) {
-  if (!container) return;
-
-  container.innerHTML = "";
-
-  const checked = [...selectedContactIds];
-  const maxVisible = 3;
-
-  const renderIcon = (id) => {
-    const contact = returnContactById(id, contactsList);
-    if (!contact) return;
-    const icon = iconTemplate(
-      getInitials(contact.name),
-      contact.color,
-      "assignedToContainerChecked"
-    );
-    if (typeof icon === "string") {
-      container.insertAdjacentHTML("beforeend", icon);
-    } else if (icon instanceof Node) {
-      container.appendChild(icon);
-    }
-  };
-
-  checked.slice(0, maxVisible).forEach(renderIcon);
-
-  const remaining = checked.length - maxVisible;
-  if (remaining > 0) {
-    const badge = document.createElement("button");
-    badge.type = "button";
-    badge.className = "profileIconContainer assignedToContainerChecked assigned-more-badge";
-    badge.textContent = `+${remaining}`;
-    badge.setAttribute("aria-label", `Show all ${checked.length} assigned contacts`);
-    badge.addEventListener("click", () => {
-      container.innerHTML = "";
-      checked.forEach(renderIcon);
-    });
-    container.appendChild(badge);
-  }
-}
-
-function getSelectedAssignedTo() {
-  return [...selectedContactIds];
-}
 
 const CATEGORY = Object.freeze({
   TECHTASK: "Technical Task",
   USERSTORY: "User Story",
 });
+
+const FORM_GETTERS = {
+  getTitle: getTitleTask,
+  getDueDate: getDueDateTask,
+  getCategory: getCategoryTask,
+};
+
+let selectedPriority = PRIORITY.MEDIUM;
+
+/**
+ * Sets up the whole add task page.
+ */
+async function initAddTaskPage() {
+  setMinimumDueDate();
+  const form = document.querySelector(".add-task-form");
+  if (form) form.noValidate = true;
+  initAssignedDropdown();
+  initCategoryDropdown();
+  initFormButtons();
+  applyContentLimits();
+  initBlurValidation(FORM_GETTERS);
+  addCategoryOptionsTask();
+  initSubtaskEventListeners();
+  initPriorityButtons(getPriorityButtonConfig());
+  await loadAddTaskContacts();
+}
+
+/**
+ * Prevents due dates in the past.
+ */
+function setMinimumDueDate() {
+  const dateInput = document.getElementById("taskDate");
+  if (dateInput) {
+    dateInput.min = new Date().toISOString().split("T")[0];
+  }
+}
+
+/**
+ * Connects the create and clear buttons.
+ */
+function initFormButtons() {
+  document.getElementById("addTaskBtn").addEventListener("click", handleCreateTaskClick);
+  document.getElementById("cancelTaskBtn").addEventListener("click", (event) => {
+    event.preventDefault();
+    resetTaskFormState();
+  });
+}
+
+/**
+ * Validates the form and creates the task.
+ * @param {MouseEvent} event - The click event.
+ */
+function handleCreateTaskClick(event) {
+  event.preventDefault();
+  if (!validateTaskForm(FORM_GETTERS)) return;
+  createTaskObject();
+}
+
+/**
+ * Returns the buttons and values for the priority buttons.
+ * @returns {Object} The configuration for initPriorityButtons.
+ */
+function getPriorityButtonConfig() {
+  return {
+    lowBtn: document.getElementById("priorityLowBtn"),
+    mediumBtn: document.getElementById("priorityMediumBtn"),
+    urgentBtn: document.getElementById("priorityUrgentBtn"),
+    priorities: { low: PRIORITY.LOW, medium: PRIORITY.MEDIUM, urgent: PRIORITY.URGENT },
+    setPriority: setSelectedPriority,
+  };
+}
+
+/**
+ * Stores the selected priority.
+ * @param {string} value - Low, Medium or Urgent.
+ */
+function setSelectedPriority(value) {
+  selectedPriority = value;
+}
+
+/**
+ * Reads the title.
+ * @returns {string} The title.
+ */
+function getTitleTask() {
+  return document.getElementById("taskTitle").value;
+}
+
+/**
+ * Reads the description.
+ * @returns {string} The description.
+ */
+function getDescriptionTask() {
+  return document.getElementById("taskDescription").value;
+}
+
+/**
+ * Reads the due date.
+ * @returns {string} The date as YYYY-MM-DD.
+ */
+function getDueDateTask() {
+  return document.getElementById("taskDate").value;
+}
+
+/**
+ * Returns the selected priority.
+ * @returns {string} Low, Medium or Urgent.
+ */
+function getPriorityTask() {
+  return selectedPriority;
+}
+
+/**
+ * Renders the options of the category dropdown.
+ */
 function addCategoryOptionsTask() {
   const list = document.getElementById("categoryOptionsList");
   if (!list) return;
   list.innerHTML = "";
-  for (const key in CATEGORY) {
-    const option = document.createElement("div");
-    option.className = "category-option";
-    option.dataset.value = CATEGORY[key];
-    option.textContent = CATEGORY[key];
-    list.appendChild(option);
-  }
+  Object.values(CATEGORY).forEach((category) => list.appendChild(createCategoryOption(category)));
 }
 
+/**
+ * Creates one option of the category dropdown.
+ * @param {string} category - Name of the category.
+ * @returns {HTMLDivElement} The option.
+ */
+function createCategoryOption(category) {
+  const option = document.createElement("div");
+  option.className = "category-option";
+  option.dataset.value = category;
+  option.textContent = category;
+  return option;
+}
+
+/**
+ * Connects the category field, its arrow and its options.
+ */
 function initCategoryDropdown() {
   const box = document.getElementById("categorySelect");
   const arrow = document.getElementById("categoryArrow");
   const list = document.getElementById("categoryOptionsList");
-  const multiSelect = box?.closest(".multi-select");
   if (!box || !list) return;
-
-  const toggle = () => {
-    const wasVisible = list.style.display === "flex";
-    list.style.display = wasVisible ? "none" : "flex";
-    multiSelect?.classList.toggle("open", !wasVisible);
-    if (!wasVisible) {
-      initOutsideClickHandler(
-        box,
-        () => {
-          list.style.display = "none";
-          multiSelect?.classList.remove("open");
-        },
-        [list, arrow].filter(Boolean)
-      );
-    }
-  };
-
-  box.addEventListener("click", toggle);
+  box.addEventListener("click", () => toggleDropdown(box, list, arrow));
   arrow?.addEventListener("click", (event) => {
     event.preventDefault();
     event.stopPropagation();
-    toggle();
+    toggleDropdown(box, list, arrow);
   });
-
-  list.addEventListener("click", (event) => {
-    const option = event.target.closest(".category-option");
-    if (!option) return;
-    box.value = option.dataset.value;
-    list.style.display = "none";
-    multiSelect?.classList.remove("open");
-    box.style.borderColor = "";
-    document.getElementById("categoryHint")?.classList.remove("show");
-  });
+  list.addEventListener("click", (event) => selectCategoryOption(event, box, list));
 }
 
+/**
+ * Writes the clicked category into the field and closes the list.
+ * @param {MouseEvent} event - The click event.
+ * @param {HTMLInputElement} box - The category field.
+ * @param {HTMLElement} list - The options list.
+ */
+function selectCategoryOption(event, box, list) {
+  const option = event.target.closest(".category-option");
+  if (!option) return;
+  box.value = option.dataset.value;
+  closeDropdown(box, list);
+  box.style.borderColor = "";
+  document.getElementById("categoryHint")?.classList.remove("show");
+}
+
+/**
+ * Reads the category, the placeholder counts as empty.
+ * @returns {string} The category or an empty string.
+ */
 function getCategoryTask() {
-  const box = document.getElementById("categorySelect");
-  const value = box?.value || "";
-  if (value === "Select task category") {
-    return "";
-  }
-  return value;
+  const value = document.getElementById("categorySelect")?.value || "";
+  return value === "Select task category" ? "" : value;
 }
 
-async function createTaskObject() {
-  const task = {
+/**
+ * Collects all values of the form.
+ * @returns {Object} The new task.
+ */
+function collectTaskData() {
+  return {
     title: getTitleTask(),
     description: getDescriptionTask(),
     dueDate: getDueDateTask(),
@@ -355,41 +217,57 @@ async function createTaskObject() {
     category: getCategoryTask(),
     subtasks: getSubtasksList(),
   };
+}
 
+/**
+ * Saves the task and blocks the create button while saving.
+ * @returns {Promise<Object>} The saved task.
+ */
+async function createTaskObject() {
+  const task = collectTaskData();
   const addTaskBtn = document.getElementById("addTaskBtn");
   if (addTaskBtn) addTaskBtn.style.pointerEvents = "none";
-
   try {
-    await addEditTask(task);
-    showBoardToast("Task added to board");
-    resetTaskFormState();
-    setTimeout(() => {
-      window.location.href = "board.html";
-    }, 1000);
+    await saveTaskAndOpenBoard(task);
   } catch (error) {
     showPopup(error.message || "Task could not be created.");
     throw error;
   } finally {
     if (addTaskBtn) addTaskBtn.style.pointerEvents = "";
   }
-
   return task;
 }
+
+/**
+ * Saves the task, confirms it and opens the board.
+ * @param {Object} task - The new task.
+ */
+async function saveTaskAndOpenBoard(task) {
+  await addEditTask(task);
+  showBoardToast("Task added to board");
+  resetTaskFormState();
+  setTimeout(() => {
+    window.location.href = "board.html";
+  }, 1000);
+}
+
+/**
+ * Sets the priority back to medium.
+ */
 function resetPrioritySelection() {
   selectedPriority = PRIORITY.MEDIUM;
 }
 
+/**
+ * Empties the whole form including the selected contacts.
+ */
 function resetTaskFormState() {
   resetAddTaskForm({
-    checkboxList,
-    selectBox,
+    checkboxList: document.getElementById("chooseContactsCheckboxList"),
+    selectBox: document.getElementById("selectedBox"),
     resetPriority: resetPrioritySelection,
   });
-  selectedContactIds.clear();
-  addContactsToAssignTask(contactsList);
-  checkCheckboxChanges();
+  resetAssignedContacts();
 }
 
-
-
-
+document.addEventListener("DOMContentLoaded", initAddTaskPage);

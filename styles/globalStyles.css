@@ -386,6 +386,11 @@ body {
   display: none;
 }
 
+.guest-user .headerRight a[href$="help.html"],
+.guest-user .help-menu-item {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .headerRight a:has(.help) {
     display: none;

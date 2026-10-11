@@ -1,15 +1,25 @@
-import { createUser } from "../core/firebase.js";
+import { createUser } from "../firebase/firebaseUsers.js";
 import { showPopup } from "../ui/feedback.js";
+
+const LOCK_ICON = "../../assets/LogIn&SignUp/lock.svg";
+const VISIBILITY_ICON = "../../assets/LogIn&SignUp/visibility.svg";
+const VISIBILITY_OFF_ICON = "../../assets/LogIn&SignUp/visibility_off.svg";
+const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+const PASSWORD_RULES = [
+  { pattern: /^[\s\S]{6,}$/, message: "Password must be at least 6 characters." },
+  { pattern: /[A-Z]/, message: "Password must contain a capital letter." },
+  { pattern: /[a-z]/, message: "Password must contain a lowercase letter." },
+  { pattern: /[!@#$%^&*(),.?\":{}|<>]/, message: "Password must contain a special character." },
+];
 
 const form = document.querySelector("form");
 const signUpBtn = document.getElementById("signUpBtn");
-
 const nameInput = document.getElementById("nameInput");
 const emailInput = document.getElementById("emailInput");
 const passwordInput = document.getElementById("passwordInput");
 const confirmInput = document.getElementById("confirmInput");
 const privacyCheck = document.getElementById("privacyCheck");
-
 const errorBox = document.getElementById("loginError");
 
 const fieldErrors = {
@@ -20,225 +30,312 @@ const fieldErrors = {
   privacy: document.getElementById("privacyError"),
 };
 
+/**
+ * Shows an error message below a field.
+ * @param {string} field - Key of the field in fieldErrors.
+ * @param {string} message - The error message.
+ */
 function setFieldError(field, message) {
   if (fieldErrors[field]) fieldErrors[field].textContent = message;
 }
 
+/**
+ * Removes the error message below a field.
+ * @param {string} field - Key of the field in fieldErrors.
+ */
 function clearFieldError(field) {
   if (fieldErrors[field]) fieldErrors[field].textContent = "";
 }
 
+/**
+ * Removes the error messages of all fields.
+ */
 function clearAllFieldErrors() {
   Object.keys(fieldErrors).forEach(clearFieldError);
 }
 
-const passwordIconImg = passwordInput.nextElementSibling.querySelector("img");
-const confirmIconImg = confirmInput.nextElementSibling.querySelector("img");
-
-const lockIcon = "../../assets/LogIn&SignUp/lock.svg";
-const visibilityIcon = "../../assets/LogIn&SignUp/visibility.svg";
-const visibilityOffIcon = "../../assets/LogIn&SignUp/visibility_off.svg";
-
-if (form) form.noValidate = true;
-
-nameInput.maxLength = 50;
-emailInput.maxLength = 120;
-passwordInput.maxLength = 64;
-confirmInput.maxLength = 64;
-
-signUpBtn.disabled = true;
-
-function checkFormValid() {
-  const isValid =
-    nameInput.value.trim().length >= 2 &&
-    isValidEmail(emailInput.value.trim()) &&
-    validatePasswordSilent(passwordInput.value) &&
-    confirmInput.value === passwordInput.value &&
-    privacyCheck.checked;
-
-  signUpBtn.disabled = !isValid;
-}
-
-nameInput.addEventListener("blur", () => {
-  if (nameInput.value.trim().length < 2) {
-    setFieldError("name", "Please enter your name.");
-  } else {
-    clearFieldError("name");
-  }
-});
-
-emailInput.addEventListener("blur", () => {
-  if (!isValidEmail(emailInput.value.trim())) {
-    setFieldError("email", "Please enter a valid email address.");
-  } else {
-    clearFieldError("email");
-  }
-});
-
-passwordInput.addEventListener("blur", () => {
-  validatePassword(passwordInput.value);
-});
-
-confirmInput.addEventListener("blur", () => {
-  if (confirmInput.value !== passwordInput.value) {
-    setFieldError("confirm", "Passwords do not match.");
-  } else {
-    clearFieldError("confirm");
-  }
-});
-
-nameInput.addEventListener("input", () => {
-  clearFieldError("name");
-  checkFormValid();
-});
-emailInput.addEventListener("input", () => {
-  clearFieldError("email");
-  checkFormValid();
-});
-passwordInput.addEventListener("input", () => {
-  clearFieldError("password");
-  checkFormValid();
-});
-confirmInput.addEventListener("input", () => {
-  clearFieldError("confirm");
-  checkFormValid();
-});
-privacyCheck.addEventListener("change", () => {
-  clearFieldError("privacy");
-  checkFormValid();
-});
-
-function setupPasswordToggle(inputEl, iconImg) {
-  inputEl.addEventListener("input", () => {
-    if (inputEl.value.length > 0) {
-      iconImg.src = visibilityIcon;
-    } else {
-      iconImg.src = lockIcon;
-      inputEl.type = "password";
-    }
-  });
-
-  iconImg.addEventListener("click", () => {
-    if (inputEl.value.length === 0) return;
-
-    if (inputEl.type === "password") {
-      inputEl.type = "text";
-      iconImg.src = visibilityOffIcon;
-    } else {
-      inputEl.type = "password";
-      iconImg.src = visibilityIcon;
-    }
-  });
-
-  iconImg.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    event.preventDefault();
-    iconImg.click();
-  });
-}
-
-setupPasswordToggle(passwordInput, passwordIconImg);
-setupPasswordToggle(confirmInput, confirmIconImg);
-
-
+/**
+ * Checks the format of an email address.
+ * @param {string} email - Email address.
+ * @returns {boolean} True if the address is valid.
+ */
 function isValidEmail(email) {
-  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email) && !email.includes("..");
+  return EMAIL_PATTERN.test(email) && !email.includes("..");
 }
 
+/**
+ * Returns the message of the first password rule that is not met.
+ * @param {string} password - The password.
+ * @returns {string} The error message or an empty string.
+ */
+function getPasswordError(password) {
+  return PASSWORD_RULES.find((rule) => !rule.pattern.test(password))?.message || "";
+}
+
+/**
+ * Checks the password rules without showing a message.
+ * @param {string} password - The password.
+ * @returns {boolean} True if all rules are met.
+ */
 function validatePasswordSilent(password) {
-  if (password.length < 6) return false;
-  if (!/[A-Z]/.test(password)) return false;
-  if (!/[a-z]/.test(password)) return false;
-  if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) return false;
-  return true;
+  return !getPasswordError(password);
 }
 
-signUpBtn.addEventListener("click", async (event) => {
+/**
+ * Checks the password rules and shows the first unmet rule below the field.
+ * @param {string} password - The password.
+ * @returns {boolean} True if all rules are met.
+ */
+function validatePassword(password) {
+  const error = getPasswordError(password);
+  if (error) {
+    setFieldError("password", error);
+  } else {
+    clearFieldError("password");
+  }
+  return !error;
+}
+
+/**
+ * Validates the name field.
+ * @returns {boolean} True if the name has at least two characters.
+ */
+function validateNameField() {
+  const valid = nameInput.value.trim().length >= 2;
+  if (valid) {
+    clearFieldError("name");
+  } else {
+    setFieldError("name", "Please enter your name.");
+  }
+  return valid;
+}
+
+/**
+ * Validates the email field.
+ * @returns {boolean} True if the email is valid.
+ */
+function validateEmailField() {
+  const valid = isValidEmail(emailInput.value.trim());
+  if (valid) {
+    clearFieldError("email");
+  } else {
+    setFieldError("email", "Please enter a valid email address.");
+  }
+  return valid;
+}
+
+/**
+ * Validates that both passwords match.
+ * @returns {boolean} True if they match.
+ */
+function validateConfirmField() {
+  const valid = confirmInput.value === passwordInput.value;
+  if (valid) {
+    clearFieldError("confirm");
+  } else {
+    setFieldError("confirm", "Passwords do not match.");
+  }
+  return valid;
+}
+
+/**
+ * Validates that the privacy policy was accepted.
+ * @returns {boolean} True if the checkbox is checked.
+ */
+function validatePrivacyField() {
+  if (!privacyCheck.checked) {
+    setFieldError("privacy", "You must accept the privacy policy.");
+  }
+  return privacyCheck.checked;
+}
+
+/**
+ * Validates every field and shows all errors at once.
+ * @returns {boolean} True if the whole form is valid.
+ */
+function validateForm() {
+  return [
+    validateNameField(),
+    validateEmailField(),
+    validatePassword(passwordInput.value),
+    validateConfirmField(),
+    validatePrivacyField(),
+  ].every(Boolean);
+}
+
+/**
+ * Checks the whole form without showing messages.
+ * @returns {boolean} True if the form can be sent.
+ */
+function isSignupFormValid() {
+  if (nameInput.value.trim().length < 2) return false;
+  if (!isValidEmail(emailInput.value.trim())) return false;
+  if (!validatePasswordSilent(passwordInput.value)) return false;
+  return confirmInput.value === passwordInput.value && privacyCheck.checked;
+}
+
+/**
+ * Enables the sign up button only for a valid form.
+ */
+function checkFormValid() {
+  signUpBtn.disabled = !isSignupFormValid();
+}
+
+/**
+ * Clears the error of a field and checks the form whenever the field changes.
+ * @param {HTMLInputElement} input - The field.
+ * @param {string} field - Key of the field in fieldErrors.
+ * @param {string} [eventName] - Event that marks a change.
+ */
+function watchField(input, field, eventName = "input") {
+  input.addEventListener(eventName, () => {
+    clearFieldError(field);
+    checkFormValid();
+  });
+}
+
+/**
+ * Returns the eye icon that belongs to a password field.
+ * @param {HTMLInputElement} inputEl - The password field.
+ * @returns {HTMLImageElement} The icon.
+ */
+function getToggleIcon(inputEl) {
+  return inputEl.nextElementSibling.querySelector("img");
+}
+
+/**
+ * Shows the eye icon while a password is typed and the lock icon when the field is empty.
+ * @param {HTMLInputElement} inputEl - The password field.
+ * @param {HTMLImageElement} iconImg - Its icon.
+ */
+function updateToggleIcon(inputEl, iconImg) {
+  if (inputEl.value.length > 0) {
+    iconImg.src = VISIBILITY_ICON;
+  } else {
+    iconImg.src = LOCK_ICON;
+    inputEl.type = "password";
+  }
+}
+
+/**
+ * Shows or hides the password in plain text.
+ * @param {HTMLInputElement} inputEl - The password field.
+ * @param {HTMLImageElement} iconImg - Its icon.
+ */
+function togglePasswordVisibility(inputEl, iconImg) {
+  if (inputEl.value.length === 0) return;
+  if (inputEl.type === "password") {
+    inputEl.type = "text";
+    iconImg.src = VISIBILITY_OFF_ICON;
+  } else {
+    inputEl.type = "password";
+    iconImg.src = VISIBILITY_ICON;
+  }
+}
+
+/**
+ * Lets keyboard users toggle the password with Enter or Space.
+ * @param {KeyboardEvent} event - The keydown event.
+ * @param {HTMLImageElement} iconImg - The icon to click.
+ */
+function handleIconKeydown(event, iconImg) {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  event.preventDefault();
+  iconImg.click();
+}
+
+/**
+ * Connects the eye icon of a password field.
+ * @param {HTMLInputElement} inputEl - The password field.
+ * @param {HTMLImageElement} iconImg - Its icon.
+ */
+function setupPasswordToggle(inputEl, iconImg) {
+  inputEl.addEventListener("input", () => updateToggleIcon(inputEl, iconImg));
+  iconImg.addEventListener("click", () => togglePasswordVisibility(inputEl, iconImg));
+  iconImg.addEventListener("keydown", (event) => handleIconKeydown(event, iconImg));
+}
+
+/**
+ * Validates the form and registers the user.
+ * @param {MouseEvent} event - The click event.
+ */
+async function handleSignUp(event) {
   event.preventDefault();
   errorBox.textContent = "";
   clearAllFieldErrors();
-
   if (!validateForm()) {
     showPopup("Please check your sign up data.", "info");
     return;
   }
+  await registerUser();
+}
 
+/**
+ * Creates the account and shows the result.
+ */
+async function registerUser() {
   try {
-    await createUser(
-      emailInput.value.trim(),
-      passwordInput.value,
-      nameInput.value.trim()
-    );
-
-    form.reset();
-    clearAllFieldErrors();
-    checkFormValid();
-
-    showPopup("Registration successful. You can now log in.", "success", 2200);
-
-    setTimeout(() => {
-      window.location.href = "../../index.html";
-    }, 900);
+    await createUser(emailInput.value.trim(), passwordInput.value, nameInput.value.trim());
+    finishRegistration();
   } catch (error) {
     errorBox.textContent = error.message;
     showPopup(error.message || "Registration failed.");
   }
-});
-
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  signUpBtn.click();
-});
-
-function validateForm() {
-  let valid = true;
-
-  if (nameInput.value.trim().length < 2) {
-    setFieldError("name", "Please enter your name.");
-    valid = false;
-  }
-
-  if (!isValidEmail(emailInput.value.trim())) {
-    setFieldError("email", "Please enter a valid email address.");
-    valid = false;
-  }
-
-  if (!validatePassword(passwordInput.value)) valid = false;
-
-  if (confirmInput.value !== passwordInput.value) {
-    setFieldError("confirm", "Passwords do not match.");
-    valid = false;
-  }
-
-  if (!privacyCheck.checked) {
-    setFieldError("privacy", "You must accept the privacy policy.");
-    valid = false;
-  }
-
-  return valid;
 }
 
-function validatePassword(password) {
-  if (password.length < 6) {
-    setFieldError("password", "Password must be at least 6 characters.");
-    return false;
-  }
-
-  if (!/[A-Z]/.test(password)) {
-    setFieldError("password", "Password must contain a capital letter.");
-    return false;
-  }
-
-  if (!/[a-z]/.test(password)) {
-    setFieldError("password", "Password must contain a lowercase letter.");
-    return false;
-  }
-
-  if (!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
-    setFieldError("password", "Password must contain a special character.");
-    return false;
-  }
-
-  clearFieldError("password");
-  return true;
+/**
+ * Resets the form, confirms the registration and returns to the login page.
+ */
+function finishRegistration() {
+  form.reset();
+  clearAllFieldErrors();
+  checkFormValid();
+  showPopup("Registration successful. You can now log in.", "success", 2200);
+  setTimeout(() => {
+    window.location.href = "../../index.html";
+  }, 900);
 }
+
+/**
+ * Turns off the browser validation, limits the input lengths and disables the button.
+ */
+function configureSignupForm() {
+  if (form) form.noValidate = true;
+  nameInput.maxLength = 50;
+  emailInput.maxLength = 120;
+  passwordInput.maxLength = 64;
+  confirmInput.maxLength = 64;
+  signUpBtn.disabled = true;
+}
+
+/**
+ * Validates the fields when they lose focus and checks the form on every change.
+ */
+function initFieldValidation() {
+  nameInput.addEventListener("blur", validateNameField);
+  emailInput.addEventListener("blur", validateEmailField);
+  passwordInput.addEventListener("blur", () => validatePassword(passwordInput.value));
+  confirmInput.addEventListener("blur", validateConfirmField);
+  watchField(nameInput, "name");
+  watchField(emailInput, "email");
+  watchField(passwordInput, "password");
+  watchField(confirmInput, "confirm");
+  watchField(privacyCheck, "privacy", "change");
+}
+
+/**
+ * Connects all inputs and buttons of the sign up page.
+ */
+function initSignup() {
+  configureSignupForm();
+  initFieldValidation();
+  setupPasswordToggle(passwordInput, getToggleIcon(passwordInput));
+  setupPasswordToggle(confirmInput, getToggleIcon(confirmInput));
+  signUpBtn.addEventListener("click", handleSignUp);
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    signUpBtn.click();
+  });
+}
+
+initSignup();
