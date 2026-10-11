@@ -2,7 +2,7 @@ import { loginWithEmail } from "../firebase/firebase.js";
 import { createOrUpdateUserProfile } from "../firebase/firebaseUsers.js";
 import { editOrAddContact } from "../firebase/firebaseContacts.js";
 import { showPopup } from "../ui/feedback.js";
-import { GUEST_EMAIL } from "../core/utility.js";
+import { GUEST_EMAIL, isGuestEmail } from "../core/utility.js";
 
 const LOCK_ICON = "./assets/LogIn&SignUp/lock.svg";
 const VISIBILITY_ICON = "./assets/LogIn&SignUp/visibility.svg";
@@ -64,6 +64,7 @@ function validatePasswordOnBlur() {
  */
 function getStoredUsername(user, fallbackName) {
   if (user.displayName) return user.displayName;
+  if (isGuestEmail(user.email)) return "Guest";
   const email = user.email || "";
   return email.includes("@") ? email.split("@")[0] : fallbackName;
 }
@@ -83,13 +84,16 @@ function persistCurrentUser(user, fallbackName = "Guest") {
 }
 
 /**
- * Logs in with the shared guest account and makes sure it has a profile and a contact.
+ * Logs in with the shared guest account and waits until it has a profile and a contact,
+ * otherwise the redirect would cancel these writes.
  * @returns {Promise<Object>} The Firebase user.
  */
 async function loginAsGlobalGuest() {
   const user = await loginWithEmail(GUEST_EMAIL, GUEST_PASSWORD);
-  createOrUpdateUserProfile(user.uid, "Guest", GUEST_EMAIL).catch(console.error);
-  editOrAddContact(user.uid, "Guest", GUEST_EMAIL, "", "#A133FF").catch(console.error);
+  await Promise.all([
+    createOrUpdateUserProfile(user.uid, "Guest", GUEST_EMAIL).catch(console.error),
+    editOrAddContact(user.uid, "Guest", GUEST_EMAIL, "", "#A133FF").catch(console.error),
+  ]);
   return user;
 }
 

@@ -77,12 +77,11 @@ function renderUsername(user) {
 }
 
 /**
- * Returns the name for the greeting, guests are greeted without a name.
+ * Returns the name for the greeting.
  * @param {Object} user - The logged-in user.
  * @returns {string} The name to show.
  */
 function getDisplayedUsername(user) {
-  if (user.username === "Guest") return "";
   return user.username || user.name || "Unknown";
 }
 
@@ -164,7 +163,7 @@ function updateTotalTasksOnBoard() {
  * @returns {string} The greeting.
  */
 function getGreeting(user) {
-  if (user?.username && user.username !== "Guest") {
+  if (user?.username) {
     return `Good morning, ${user.username}!`;
   }
   return "Good morning!";

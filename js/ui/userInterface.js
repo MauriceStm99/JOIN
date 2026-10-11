@@ -4,9 +4,11 @@ import { showPopup } from "./feedback.js";
 import { getStoredCurrentUser, isGuestEmail } from "../core/utility.js";
 
 const PUBLIC_PAGES = ["", "index.html", "signUp.html"];
+const GUEST_INITIALS = "G";
 
 let uid = null;
 let username = null;
+let isGuest = false;
 
 /**
  * Loads the username after login, or sends logged-out users back to the login page.
@@ -18,16 +20,25 @@ async function handleAuthChange(user) {
     return;
   }
   uid = user.uid;
-  hideHelpForGuest(user.email);
-  await loadUsername();
+  isGuest = isGuestEmail(user.email);
+  applyGuestView();
+  if (!isGuest) await loadUsername();
 }
 
 /**
- * Hides the help icon and the help entry of the profile menu for the guest account.
- * @param {string|undefined} email - Email of the logged-in user.
+ * Applies the guest view right away from the stored user, Firebase confirms it after login.
  */
-function hideHelpForGuest(email) {
-  document.documentElement.classList.toggle("guest-user", isGuestEmail(email));
+function applyStoredGuestState() {
+  isGuest = isGuestEmail(getStoredCurrentUser()?.email);
+  applyGuestView();
+}
+
+/**
+ * Hides the help icon and the help menu entry for the guest and shows "G" as initials.
+ */
+function applyGuestView() {
+  document.documentElement.classList.toggle("guest-user", isGuest);
+  if (isGuest) editProfileInitials();
 }
 
 /**
@@ -71,12 +82,12 @@ export function getInitials(name) {
 }
 
 /**
- * Writes the initials of the logged-in user into the header avatar.
+ * Writes the initials of the logged-in user into the header avatar, the guest gets "G".
  */
 export function editProfileInitials() {
   const nameInitialsElement = document.getElementById("nameInitials");
   if (nameInitialsElement) {
-    nameInitialsElement.innerHTML = getInitials(username);
+    nameInitialsElement.innerHTML = isGuest ? GUEST_INITIALS : getInitials(username);
   }
 }
 
@@ -106,6 +117,6 @@ function addEventListenersToProfileButtons() {
   document.getElementById("logoutBtn")?.addEventListener("click", logoutUser);
 }
 
-hideHelpForGuest(getStoredCurrentUser()?.email);
+applyStoredGuestState();
 onAuthChange(handleAuthChange);
 document.addEventListener("DOMContentLoaded", addEventListenersToProfileButtons);
