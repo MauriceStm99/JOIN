@@ -1,9 +1,9 @@
 import { createUser } from "../firebase/firebaseUsers.js";
 import { showPopup } from "../ui/feedback.js";
 
-const LOCK_ICON = "../../assets/LogIn&SignUp/lock.svg";
-const VISIBILITY_ICON = "../../assets/LogIn&SignUp/visibility.svg";
-const VISIBILITY_OFF_ICON = "../../assets/LogIn&SignUp/visibility_off.svg";
+const LOCK_ICON = "../../assets/logIn&SignUp/lock.svg";
+const VISIBILITY_ICON = "../../assets/logIn&SignUp/visibility.svg";
+const VISIBILITY_OFF_ICON = "../../assets/logIn&SignUp/visibility_off.svg";
 const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const PASSWORD_RULES = [

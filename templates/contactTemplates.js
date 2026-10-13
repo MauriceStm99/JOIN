@@ -13,23 +13,23 @@ export const addContactTemplate = `
     <div class="edit-contact-right">
       <button class="close-btn" id="closeAddContactBtn" type="button" aria-label="Close">&times;</button>
       <div class="profile-circle profile-circle-add">
-        <img src="../../assets/LogIn&SignUp/person1.svg" class="icon-profile" alt="">
+        <img src="../../assets/logIn&SignUp/person1.svg" class="icon-profile" alt="">
       </div>
 
       <form class="edit-form" novalidate>
         <div class="input-wrapper">
           <input type="text" id="AddContactNameInput" placeholder="Name" maxlength="50" autocomplete="off">
-          <span class="icon"><img src="../../assets/LogIn&SignUp/person.svg" alt=""></span>
+          <span class="icon"><img src="../../assets/logIn&SignUp/person.svg" alt=""></span>
         </div>
 
         <div class="input-wrapper">
           <input type="text" id="AddContactEmailInput" placeholder="Email" maxlength="120" autocomplete="off" inputmode="email">
-          <span class="icon"><img src="../../assets/LogIn&SignUp/mail.svg" alt=""></span>
+          <span class="icon"><img src="../../assets/logIn&SignUp/mail.svg" alt=""></span>
         </div>
 
         <div class="input-wrapper">
           <input type="text" id="AddContactPhoneNumberInput" placeholder="Phone" maxlength="30" autocomplete="off" inputmode="tel">
-          <span class="icon"><img src="../../assets/LogIn&SignUp/call.svg" alt=""></span>
+          <span class="icon"><img src="../../assets/logIn&SignUp/call.svg" alt=""></span>
         </div>
 
         <div class="vacation-row">
@@ -246,7 +246,7 @@ function contactInputTemplate({ id, placeholder, value, maxLength, icon, inputMo
   return `
         <div class="input-wrapper">
           <input type="text" id="${id}" placeholder="${placeholder}" value="${escapeHtml(value)}" maxlength="${maxLength}" autocomplete="off"${inputMode ? ` inputmode="${inputMode}"` : ""}>
-          <span class="icon"><img src="../../assets/LogIn&SignUp/${icon}" alt=""></span>
+          <span class="icon"><img src="../../assets/logIn&SignUp/${icon}" alt=""></span>
         </div>`;
 }
 
