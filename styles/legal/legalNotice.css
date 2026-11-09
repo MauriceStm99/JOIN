@@ -72,17 +72,8 @@
   }
 
   @media (max-width: 900px){
-    .header-title {
-      font-size: 16px;
-    }
     h1 {
       font-size: 48px;
-    }
-  }
-
-  @media (max-width: 825px){
-    .header-title {
-      font-size: 18px;
     }
   }
 
@@ -103,10 +94,6 @@
       padding-right: 50px;
       padding-left: 270px;
     }
-    .header-title{
-      font-size: 16px;
-      padding-left: 0px;
-    }
   }
 
   @media (max-width:700px){
@@ -120,9 +107,6 @@
       font-size: 16px;
     }
     .legal-bullets{
-      font-size: 16px;
-    }
-    .header-title{
       font-size: 16px;
     }
     .main-content-legal {
@@ -228,7 +212,6 @@
       display: flex !important;
     }
     .header{
-      width: 100% !important;
       left: 0;
     }
 
@@ -274,6 +257,9 @@
     }
     .header-logo-small {
       display: block;
+      position: absolute;
+      top: 25px;
+      left: 16px;
       width: 32px;
       height: 39px;
     }
