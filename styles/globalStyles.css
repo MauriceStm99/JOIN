@@ -348,14 +348,15 @@ body {
   background: #2A3647;
   border-radius: 16px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-  padding: 10px 0;
+  padding: 10px 8px;
   gap: 4px;
   z-index: 999;
 }
 
 .profileShowMore a,
 .profileShowMore button {
-  padding: 10px 16px;
+  padding: 10px 8px;
+  border-radius: 8px;
   font-size: 16px;
   text-align: left;
   background: none;
@@ -370,7 +371,7 @@ body {
 
 .profileShowMore a:hover,
 .profileShowMore button:hover {
-  background-color: var(--veryLightGray-default);
+  background-color: #3a4b63;
 }
 
 .profileShowMore hr {
