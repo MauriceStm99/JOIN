@@ -73,15 +73,6 @@ function getPasswordError(password) {
 }
 
 /**
- * Checks the password rules without showing a message.
- * @param {string} password - The password.
- * @returns {boolean} True if all rules are met.
- */
-function validatePasswordSilent(password) {
-  return !getPasswordError(password);
-}
-
-/**
  * Checks the password rules and shows the first unmet rule below the field.
  * @param {string} password - The password.
  * @returns {boolean} True if all rules are met.
@@ -164,34 +155,13 @@ function validateForm() {
 }
 
 /**
- * Checks the whole form without showing messages.
- * @returns {boolean} True if the form can be sent.
- */
-function isSignupFormValid() {
-  if (nameInput.value.trim().length < 2) return false;
-  if (!isValidEmail(emailInput.value.trim())) return false;
-  if (!validatePasswordSilent(passwordInput.value)) return false;
-  return confirmInput.value === passwordInput.value && privacyCheck.checked;
-}
-
-/**
- * Enables the sign up button only for a valid form.
- */
-function checkFormValid() {
-  signUpBtn.disabled = !isSignupFormValid();
-}
-
-/**
- * Clears the error of a field and checks the form whenever the field changes.
+ * Clears the error of a field whenever the field changes.
  * @param {HTMLInputElement} input - The field.
  * @param {string} field - Key of the field in fieldErrors.
  * @param {string} [eventName] - Event that marks a change.
  */
 function watchField(input, field, eventName = "input") {
-  input.addEventListener(eventName, () => {
-    clearFieldError(field);
-    checkFormValid();
-  });
+  input.addEventListener(eventName, () => clearFieldError(field));
 }
 
 /**
@@ -289,7 +259,6 @@ async function registerUser() {
 function finishRegistration() {
   form.reset();
   clearAllFieldErrors();
-  checkFormValid();
   showPopup("Registration successful. You can now log in.", "success", 2200);
   setTimeout(() => {
     window.location.href = "../../index.html";
@@ -297,7 +266,7 @@ function finishRegistration() {
 }
 
 /**
- * Turns off the browser validation, limits the input lengths and disables the button.
+ * Turns off the browser validation and limits the input lengths.
  */
 function configureSignupForm() {
   if (form) form.noValidate = true;
@@ -305,11 +274,10 @@ function configureSignupForm() {
   emailInput.maxLength = 120;
   passwordInput.maxLength = 64;
   confirmInput.maxLength = 64;
-  signUpBtn.disabled = true;
 }
 
 /**
- * Validates the fields when they lose focus and checks the form on every change.
+ * Validates the fields when they lose focus and clears their error on every change.
  */
 function initFieldValidation() {
   nameInput.addEventListener("blur", validateNameField);
