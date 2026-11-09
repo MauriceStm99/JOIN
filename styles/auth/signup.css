@@ -286,5 +286,50 @@ dialog.app-popup {
   }
 }
 
+/* Low screens: everything fits without scrolling. */
+@media (min-width: 681px) and (max-height: 980px) {
+  .page-header {
+    padding: 16px 60px;
+  }
 
-  
+  .logo img {
+    height: 72px;
+    width: auto;
+  }
+
+  .Box-position {
+    padding: 8px 16px;
+  }
+
+  .login-box-signup {
+    min-height: 0;
+    padding: 24px 48px;
+  }
+
+  .login-box-signup h1 {
+    font-size: 44px;
+    margin-bottom: 6px;
+  }
+
+  .underline {
+    margin: 0 auto 14px;
+  }
+
+  .btn-group {
+    padding-top: 8px;
+  }
+
+  .back-btn {
+    top: 24px;
+  }
+
+  footer {
+    padding: 12px 50px;
+  }
+}
+
+@media (max-width: 680px) {
+  footer {
+    padding: 8px 20px;
+  }
+}

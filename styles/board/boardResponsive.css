@@ -278,14 +278,7 @@
 
     .overlay-assignees{
         margin-bottom: 12px;
-        max-height: 112px;
-        overflow-y: auto;
         gap: 12px;
-    }
-
-    .overlay-subtasks{
-        max-height: 176px;
-        overflow-y: auto;
     }
 
     .overlay-field-content{
@@ -352,28 +345,36 @@
         width: 100%;
     }
 
-    .tasks-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
-        align-content: start;
+    html:has(#taskDetailOverlay.active) {
+        background-color: #fff;
+    }
+
+     .tasks-container{
+        display: flex;
+        flex-direction: row;
         gap: 12px;
-        padding: 12px 12px 16px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        padding: 12px 20px 16px 12px;
+    }
+
+    .tasks-container::-webkit-scrollbar {
+        display: none;
     }
 
     body.drag-active .tasks-container {
         padding-bottom: 16px;
-    }
-
-    .no-task {
-        grid-column: 1 / -1;
+        padding-right: 262px;
     }
 
     body.drag-active .no-task {
         display: none;
     }
 
-    .task-card {
-        min-width: 0;
+    .task-card{
+        width: 250px;
+        min-width: 250px;
+        flex-shrink: 0;
         margin-bottom: 0;
     }
 }

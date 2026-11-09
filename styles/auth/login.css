@@ -324,6 +324,25 @@ footer a:hover {
   }
 }
 
+/* Low screens: everything fits without scrolling, the header stays for the logo animation. */
+@media (min-width: 681px) and (max-height: 900px) {
+  .main-content {
+    padding: 8px 16px;
+    margin-bottom: 0;
+  }
 
+  .login-box {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
 
+  footer {
+    padding: 16px 50px;
+  }
+}
 
+@media (max-width: 680px) {
+  footer {
+    padding: 8px 20px;
+  }
+}

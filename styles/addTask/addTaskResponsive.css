@@ -217,3 +217,15 @@
     height: 40px;
   }
 }
+
+/* Low screens: the form fits without scrolling where only a few pixels are missing. */
+@media (min-width: 769px) and (max-height: 950px) {
+  .add-task-wrapper {
+    gap: 12px;
+    padding-bottom: 0;
+  }
+
+  .add-task-wrapper h1 {
+    padding-top: 100px;
+  }
+}
