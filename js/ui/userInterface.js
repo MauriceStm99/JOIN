@@ -34,7 +34,7 @@ function applyStoredGuestState() {
 }
 
 /**
- * Hides the help icon and the help menu entry for the guest and shows "G" as initials.
+ * Marks the guest view, which hides the help on the legal pages, and shows "G" as initials.
  */
 function applyGuestView() {
   document.documentElement.classList.toggle("guest-user", isGuest);

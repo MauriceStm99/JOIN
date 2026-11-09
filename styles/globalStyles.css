@@ -387,8 +387,8 @@ body {
   display: none;
 }
 
-.guest-user .headerRight a[href$="help.html"],
-.guest-user .help-menu-item {
+.guest-user .hide-help-for-guest .headerRight a[href$="help.html"],
+.guest-user .hide-help-for-guest .help-menu-item {
   display: none;
 }
 
