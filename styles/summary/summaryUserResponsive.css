@@ -334,7 +334,7 @@
     flex: 1 1 0;
     min-width: 0;
     gap: 4px;
-    margin-left: 24px;
+    margin-left: 0;
   }
 
   .summary-metric-value {
@@ -347,5 +347,123 @@
   .summary-metric-deadline-date {
     font-size: 16px;
     text-align: center;
+  }
+}
+
+/* Mobile: the whole summary fits on one screen, the tiles share the free height. */
+@media (max-width: 768px) {
+  .main-content-summary {
+    padding: 103px 16px 82px;
+  }
+
+  .summary-header-row {
+    gap: 2px;
+    margin-bottom: 10px;
+  }
+
+  .summary-title {
+    font-size: 32px;
+  }
+
+  .summary-subtitle-row {
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .summary-metrics {
+    height: auto;
+    min-height: min(560px, calc(100vh - 262px));
+    min-height: min(560px, calc(100dvh - 262px));
+    gap: 10px;
+  }
+
+  .summary-metrics-row-1,
+  .summary-metrics-row-2,
+  .summary-metrics-row-3 {
+    display: flex;
+    flex: 1 1 auto;
+    height: auto;
+    gap: 10px;
+  }
+
+  .summary-metrics a {
+    display: flex;
+  }
+
+  .summary-metric-tile-row-1,
+  .summary-metric-tile-row-2,
+  .summary-metric-tile-row-3 {
+    height: auto;
+    min-height: 0;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .summary-metric-tile-row-1 {
+    flex-direction: row;
+  }
+
+  .summary-metric-tile-row-1,
+  .summary-metric-tile-row-3 {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .summary-metric-tile-row-2 {
+    flex-wrap: nowrap;
+  }
+
+  .summary-metric-urgent,
+  .summary-metric-deadline {
+    flex: 1 1 auto;
+    justify-content: center;
+    align-items: center;
+    min-width: 0;
+    margin-left: 0;
+  }
+
+  .summary-metric-urgent {
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .summary-metric-deadline {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .summary-metric-icon,
+  .summary-metric-urgent-icon {
+    width: clamp(40px, 7vh, 60px);
+    height: clamp(40px, 7vh, 60px);
+    padding: 8px;
+  }
+
+  .summary-metric-value {
+    font-size: clamp(30px, 6vh, 48px);
+  }
+}
+
+/* The splash screen already greets the user below this width. */
+@media (max-width: 749px) {
+  .summary-greeting {
+    display: none;
+  }
+
+  .summary-metrics {
+    min-height: calc(100vh - 262px);
+    min-height: calc(100dvh - 262px);
+  }
+}
+
+/* Very low screens: the tiles need the space of the title. */
+@media (max-width: 768px) and (max-height: 520px) {
+  .summary-header-row {
+    display: none;
+  }
+
+  .summary-metrics {
+    min-height: calc(100vh - 186px);
+    min-height: calc(100dvh - 186px);
   }
 }

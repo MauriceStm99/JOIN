@@ -200,6 +200,10 @@
     flex-direction: column;
 }
 
+.mobile-nav {
+    display: none;
+}
+
 .tasks-container {
     display: flex;
     flex-direction: column;
@@ -218,23 +222,6 @@
 
 body.drag-active .tasks-container {
     padding-bottom: 260px;
-}
-
-.tasks-container::-webkit-scrollbar {
-    width: 4px;
-}
-
-.tasks-container::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.tasks-container::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 2px;
-}
-
-.tasks-container::-webkit-scrollbar-thumb:hover {
-    background-color: #999;
 }
 
 .task-card {
