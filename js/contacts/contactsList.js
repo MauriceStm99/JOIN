@@ -119,7 +119,8 @@ function findContactByIndex(index) {
 }
 
 /**
- * Shows the details of a clicked contact, a click on a cut off email shows the full email.
+ * Shows the details of a clicked contact and slides them in unless they are already open,
+ * a click on a cut off email shows the full email.
  * @param {MouseEvent} event - The click event.
  */
 export function contactListClickHandler(event) {
@@ -131,7 +132,20 @@ export function contactListClickHandler(event) {
     return;
   }
   const contact = findContactByIndex(Number(item.dataset.contactId));
-  if (contact) contactShowDetails(contact, contact._index);
+  if (!contact) return;
+  const isAlreadyShown = contact === currentShownContact;
+  contactShowDetails(contact, contact._index);
+  if (!isAlreadyShown) animateContactDetails();
+}
+
+/**
+ * Lets the detail view slide in like the contact dialogs.
+ */
+function animateContactDetails() {
+  const details = document.getElementById("contactDetailsContainer");
+  if (!details) return;
+  details.classList.add("contact-details-slide-in");
+  details.addEventListener("animationend", () => details.classList.remove("contact-details-slide-in"), { once: true });
 }
 
 /**
@@ -243,7 +257,7 @@ export function addContactToList(contactData) {
 /**
  * Applies edited values to a contact, renders the list and shows the contact again.
  * @param {string} contactId - Contact id.
- * @param {Object} values - Name, email, phone number and vacation days.
+ * @param {Object} values - Name, email and phone number.
  */
 export function updateContactInList(contactId, values) {
   const contact = contacts.find((entry) => entry.id === contactId);

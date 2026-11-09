@@ -214,6 +214,14 @@
     gap: 40px;
 }
 
+.contact-details-slide-in {
+    animation: slideInFromRight 300ms ease-out;
+}
+
+.contacts-right:has(.contact-details-slide-in) {
+    overflow-x: hidden;
+}
+
 .contact-details-overlay{
     display: flex;
         flex-direction: column;

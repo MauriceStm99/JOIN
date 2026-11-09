@@ -1,7 +1,7 @@
 import { getTask, updateTask } from "../../firebase/firebaseTasks.js";
 import { editTaskFormTemplate } from "../../../templates/boardEditTemplates.js";
 import { showPopup } from "../../ui/feedback.js";
-import { updateTaskCard } from "../boardRender.js";
+import { updateTaskCard, getHiddenAssigneeIds } from "../boardRender.js";
 import { showTaskDetail } from "../boardDetail.js";
 import {
   initEditAssignedTo,
@@ -168,10 +168,13 @@ function isEditFormValid(taskId) {
 
 /**
  * Saves the task, updates its card and shows the detail view again.
+ * Assignees that are not in the form stay assigned.
  * @param {string} taskId - Task id.
  */
 async function saveEditedTask(taskId) {
-  await updateTask(taskId, collectEditFormData(taskId));
+  const formData = collectEditFormData(taskId);
+  const hiddenIds = getHiddenAssigneeIds(await getTask(taskId));
+  await updateTask(taskId, { ...formData, assignedTo: [...formData.assignedTo, ...hiddenIds] });
   const updatedTask = await getTask(taskId);
   await updateTaskCard(taskId, updatedTask);
   closeEditOverlay();

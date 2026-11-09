@@ -50,6 +50,16 @@ export function getAssignedContacts(task) {
 }
 
 /**
+ * Returns the assigned ids that are not in the contact list of the current user,
+ * for example real accounts on a task that the guest is looking at.
+ * @param {Object} task - The task.
+ * @returns {string[]} The contact ids.
+ */
+export function getHiddenAssigneeIds(task) {
+  return getAssignedIds(task).filter((uid) => !returnContactById(uid, contactsList));
+}
+
+/**
  * Renders all tasks into their columns.
  * @param {Object[]} tasks - The tasks.
  */

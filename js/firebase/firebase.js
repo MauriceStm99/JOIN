@@ -5,6 +5,7 @@ import {
   onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { isGuestEmail } from "../core/utility.js";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyAuMjatRtEmm3DlwGJmJFVyFubVSBYyHZE",
@@ -58,6 +59,15 @@ export function logout() {
  */
 export function onAuthChange(callback) {
   return onAuthStateChanged(auth, callback);
+}
+
+/**
+ * Checks whether the guest account is logged in, waits until Firebase knows the user.
+ * @returns {Promise<boolean>} True for the guest.
+ */
+export async function isGuestSession() {
+  await auth.authStateReady();
+  return isGuestEmail(auth.currentUser?.email);
 }
 
 /**

@@ -392,6 +392,10 @@ body {
   display: none;
 }
 
+.guest-user #editProfileBtn {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .headerRight a:has(.help) {
     display: none;

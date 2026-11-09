@@ -153,20 +153,6 @@ body, p, span, a, li, label, input, textarea, select, button {
   width: 100%;
 }
 
-.vacation-row {
-  display: flex;
-  gap: 14px;
-}
-
-.vacation-row .input-wrapper {
-  flex: 1;
-  min-width: 0;
-}
-
-.vacation-row input {
-  padding-right: 18px;
-}
-
 .edit-form input {
   width: 100%;
   height: 56px;

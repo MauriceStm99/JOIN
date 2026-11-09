@@ -6,7 +6,6 @@ import {
   configureContactFormValidation,
   getAddContactFormValues,
   isValidEmail,
-  readVacationDaysInput,
 } from "./contactsFormHelpers.js";
 import {
   addContactToList,
@@ -61,21 +60,18 @@ export function closeAddContactOverlay() {
 
 /**
  * Returns the first problem of the entered contact values.
- * @param {Object} values - Name, email and vacation days.
+ * @param {Object} values - Name and email.
  * @returns {string} The error message or an empty string.
  */
-function validateContactValues({ name, email, vacationDaysTaken, vacationDaysTotal }) {
+function validateContactValues({ name, email }) {
   if (name.length < 2) return "Please provide a valid contact name.";
   if (!isValidEmail(email)) return "Please provide a valid contact email.";
-  if (vacationDaysTotal > 0 && vacationDaysTaken > vacationDaysTotal) {
-    return "Taken vacation days cannot exceed the total.";
-  }
   return "";
 }
 
 /**
  * Validates the entered values and shows the first problem.
- * @param {Object} values - Name, email and vacation days.
+ * @param {Object} values - Name and email.
  * @returns {boolean} True if the contact can be saved.
  */
 function isContactInputValid(values) {
@@ -105,14 +101,13 @@ async function addContact() {
  * Stores a new contact with a random color and adds it to the list.
  * @param {Object} values - The entered values.
  */
-async function saveNewContact({ name, email, phoneNumber, vacationDaysTaken, vacationDaysTotal }) {
+async function saveNewContact({ name, email, phoneNumber }) {
   const id = crypto.randomUUID();
   const color = getRandomColor();
-  const vacationDays = { taken: vacationDaysTaken, total: vacationDaysTotal };
-  const returnedId = await editOrAddContact(id, name, email, phoneNumber, color, vacationDays);
+  const returnedId = await editOrAddContact(id, name, email, phoneNumber, color);
   addContactToList({
     id: returnedId || id,
-    name, email, phoneNumber, vacationDaysTaken, vacationDaysTotal,
+    name, email, phoneNumber,
     initials: getContactInitials(name),
     color,
   });
@@ -154,10 +149,6 @@ function fillEditForm({ nameInput, emailInput, phoneInput }, contact) {
   if (nameInput) nameInput.value = contact.name || "";
   if (emailInput) emailInput.value = contact.email || "";
   if (phoneInput) phoneInput.value = contact.phoneNumber || "";
-  const vacationTakenInput = document.getElementById("EditContactVacationTakenInput");
-  const vacationTotalInput = document.getElementById("EditContactVacationTotalInput");
-  if (vacationTakenInput) vacationTakenInput.value = contact.vacationDaysTaken ?? "";
-  if (vacationTotalInput) vacationTotalInput.value = contact.vacationDaysTotal ?? "";
 }
 
 /**
@@ -208,7 +199,7 @@ async function handleDeleteFromEdit(event, contact) {
 /**
  * Reads the values of the edit dialog, missing fields keep the old value.
  * @param {Object} contact - The edited contact.
- * @returns {Object} Name, email, phone number and vacation days.
+ * @returns {Object} Name, email and phone number.
  */
 function readEditFormValues(contact) {
   const { nameInput, emailInput, phoneInput } = getEditFormInputs();
@@ -216,8 +207,6 @@ function readEditFormValues(contact) {
     name: nameInput ? nameInput.value.trim() : contact.name,
     email: emailInput ? emailInput.value.trim() : contact.email,
     phoneNumber: phoneInput ? phoneInput.value.trim() : contact.phoneNumber,
-    vacationDaysTaken: readVacationDaysInput("EditContactVacationTakenInput"),
-    vacationDaysTotal: readVacationDaysInput("EditContactVacationTotalInput"),
   };
 }
 
@@ -230,8 +219,7 @@ async function saveEditedContact(contact) {
   const values = readEditFormValues(contact);
   if (!isContactInputValid(values)) return false;
   try {
-    const vacationDays = { taken: values.vacationDaysTaken, total: values.vacationDaysTotal };
-    await editOrAddContact(contact.id, values.name, values.email, values.phoneNumber, contact.color, vacationDays);
+    await editOrAddContact(contact.id, values.name, values.email, values.phoneNumber, contact.color);
     updateContactInList(contact.id, values);
     showPopup("Contact updated.", "success");
     return true;

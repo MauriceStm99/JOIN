@@ -3,7 +3,6 @@ import { showPopup } from "../ui/feedback.js";
 const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const INVALID_PHONE_CHARACTERS = /[^0-9+\-()/ ]/g;
 const MIN_PHONE_LENGTH = 5;
-const MAX_VACATION_DAYS = 365;
 
 /**
  * Checks the format of an email address.
@@ -95,25 +94,11 @@ function validatePhoneOnBlur(phoneInput) {
 
 /**
  * Reads all values of the add contact form.
- * @returns {Object} Name, email, phone number and vacation days.
+ * @returns {Object} Name, email and phone number.
  */
 export function getAddContactFormValues() {
   const name = document.getElementById("AddContactNameInput")?.value.trim() || "";
   const email = document.getElementById("AddContactEmailInput")?.value.trim() || "";
   const phoneNumber = document.getElementById("AddContactPhoneNumberInput")?.value.trim() || "";
-  const vacationDaysTaken = readVacationDaysInput("AddContactVacationTakenInput");
-  const vacationDaysTotal = readVacationDaysInput("AddContactVacationTotalInput");
-  return { name, email, phoneNumber, vacationDaysTaken, vacationDaysTotal };
-}
-
-/**
- * Reads a vacation days field as a number between 0 and 365.
- * @param {string} id - Id of the field.
- * @returns {number} The number of days.
- */
-export function readVacationDaysInput(id) {
-  const raw = document.getElementById(id)?.value.trim() || "";
-  const parsed = Number.parseInt(raw, 10);
-  if (Number.isNaN(parsed)) return 0;
-  return Math.min(Math.max(parsed, 0), MAX_VACATION_DAYS);
+  return { name, email, phoneNumber };
 }

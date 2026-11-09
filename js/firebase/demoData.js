@@ -5,8 +5,9 @@ import {
   collection,
   getDocs,
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-import { db } from "./firebase.js";
+import { db, isGuestSession } from "./firebase.js";
 
+/** The contacts of the guest account, they are not stored in the database. */
 export const demoContacts = [
   {
     id: "contact_ae",
@@ -42,6 +43,20 @@ export const demoContacts = [
     email: "alan.turing@join.com",
     phoneNumber: "+49 174 5678901",
     color: "#1FD7C1"
+  },
+  {
+    id: "contact_gh",
+    name: "Grace Hopper",
+    email: "grace.hopper@join.com",
+    phoneNumber: "+49 175 6789012",
+    color: "#FC71FF"
+  },
+  {
+    id: "contact_in",
+    name: "Isaac Newton",
+    email: "isaac.newton@join.com",
+    phoneNumber: "+49 176 7890123",
+    color: "#FFC701"
   }
 ];
 
@@ -131,12 +146,13 @@ export function seedDemoDataIfEmpty() {
 }
 
 /**
- * Writes the demo contacts and tasks if there are no contacts and no tasks yet.
+ * Writes the demo tasks if there are no contacts and no tasks yet.
+ * The guest does not seed, because that would read the real contacts.
  */
 async function seedDemoData() {
   try {
+    if (await isGuestSession()) return;
     if (!(await isDatabaseEmpty())) return;
-    await writeDemoContacts();
     await writeDemoTasks();
     console.log("Demo data successfully seeded to Firebase Firestore.");
   } catch (error) {
@@ -152,19 +168,6 @@ async function isDatabaseEmpty() {
   const contactsSnap = await getDocs(collection(db, "contacts"));
   const tasksSnap = await getDocs(collection(db, "tasks"));
   return contactsSnap.empty && tasksSnap.empty;
-}
-
-/**
- * Writes all demo contacts.
- */
-async function writeDemoContacts() {
-  for (const { id, ...contactData } of demoContacts) {
-    await setDoc(doc(db, "contacts", id), {
-      ...contactData,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    });
-  }
 }
 
 /**

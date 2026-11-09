@@ -1,6 +1,6 @@
 import { loginWithEmail } from "../firebase/firebase.js";
 import { createOrUpdateUserProfile } from "../firebase/firebaseUsers.js";
-import { editOrAddContact } from "../firebase/firebaseContacts.js";
+import { resetGuestContacts } from "../firebase/guestContacts.js";
 import { showPopup } from "../ui/feedback.js";
 import { GUEST_EMAIL, isGuestEmail } from "../core/utility.js";
 
@@ -84,16 +84,14 @@ function persistCurrentUser(user, fallbackName = "Guest") {
 }
 
 /**
- * Logs in with the shared guest account and waits until it has a profile and a contact,
- * otherwise the redirect would cancel these writes.
+ * Logs in with the shared guest account and starts with fresh demo contacts.
+ * Waits until the guest has a profile, otherwise the redirect would cancel this write.
  * @returns {Promise<Object>} The Firebase user.
  */
 async function loginAsGlobalGuest() {
   const user = await loginWithEmail(GUEST_EMAIL, GUEST_PASSWORD);
-  await Promise.all([
-    createOrUpdateUserProfile(user.uid, "Guest", GUEST_EMAIL).catch(console.error),
-    editOrAddContact(user.uid, "Guest", GUEST_EMAIL, "", "#A133FF").catch(console.error),
-  ]);
+  await createOrUpdateUserProfile(user.uid, "Guest", GUEST_EMAIL).catch(console.error);
+  resetGuestContacts();
   return user;
 }
 

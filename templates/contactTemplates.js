@@ -32,15 +32,6 @@ export const addContactTemplate = `
           <span class="icon"><img src="../../assets/logIn&SignUp/call.svg" alt=""></span>
         </div>
 
-        <div class="vacation-row">
-          <div class="input-wrapper">
-            <input type="number" id="AddContactVacationTakenInput" placeholder="Vacation taken" min="0" max="365" inputmode="numeric" aria-label="Vacation days taken">
-          </div>
-          <div class="input-wrapper">
-            <input type="number" id="AddContactVacationTotalInput" placeholder="Vacation total" min="0" max="365" inputmode="numeric" aria-label="Vacation days total">
-          </div>
-        </div>
-
         <div class="buttons">
           <button class="delete-btn" id="cancelAddContactBtn" type="button">Cancel &times;</button>
           <button class="save-btn" id="saveContactBtn" type="submit">Create contact &#10003;</button>
@@ -81,21 +72,6 @@ function contactItemTemplate(contact) {
           </div>
         </button>
       `;
-}
-
-/**
- * Builds the vacation text of the detail view.
- * @param {Object} contact - The contact.
- * @returns {string} For example "3 of 30 taken · 27 remaining".
- */
-function getVacationText(contact) {
-  const vacationTaken = Number(contact.vacationDaysTaken) || 0;
-  const vacationTotal = Number(contact.vacationDaysTotal) || 0;
-  if (vacationTotal > 0) {
-    const remaining = Math.max(vacationTotal - vacationTaken, 0);
-    return `${vacationTaken} of ${vacationTotal} taken &middot; ${remaining} remaining`;
-  }
-  return vacationTaken > 0 ? `${vacationTaken} taken` : "-";
 }
 
 /**
@@ -149,7 +125,7 @@ function contactDetailsButtonsTemplate() {
 }
 
 /**
- * Renders email, phone and vacation days of the detail view.
+ * Renders email and phone of the detail view.
  * @param {Object} contact - The contact.
  * @returns {string} The body HTML.
  */
@@ -160,7 +136,6 @@ function contactDetailsBodyTemplate(contact) {
     <h3>Contact Information</h3>
     ${contactInfoRowTemplate("Email", `<a href="mailto:${safeEmail}">${safeEmail}</a>`)}
     ${contactInfoRowTemplate("Phone", `<span>${escapeHtml(contact.phoneNumber || "-")}</span>`)}
-    ${contactInfoRowTemplate("Vacation days", `<span>${getVacationText(contact)}</span>`)}
   </div>`;
 }
 
@@ -229,7 +204,6 @@ function editContactFormTemplate(name, email, phoneNumber) {
         ${contactInputTemplate({ id: "EditContactNameInput", placeholder: "Name", value: name, maxLength: 50, icon: "person.svg" })}
         ${contactInputTemplate({ id: "EditContactEmailInput", placeholder: "Mail", value: email, maxLength: 120, icon: "mail.svg", inputMode: "email" })}
         ${contactInputTemplate({ id: "EditContactPhoneNumberInput", placeholder: "Phone Number", value: phoneNumber, maxLength: 30, icon: "call.svg", inputMode: "tel" })}
-        ${vacationRowTemplate("EditContact")}
         <div class="buttons">
           <button class="delete-btn" id="deleteEditContactBtn" type="button">Delete</button>
           <button class="save-btn" id="saveEditContactBtn" type="submit">Save &#10003;</button>
@@ -247,22 +221,5 @@ function contactInputTemplate({ id, placeholder, value, maxLength, icon, inputMo
         <div class="input-wrapper">
           <input type="text" id="${id}" placeholder="${placeholder}" value="${escapeHtml(value)}" maxlength="${maxLength}" autocomplete="off"${inputMode ? ` inputmode="${inputMode}"` : ""}>
           <span class="icon"><img src="../../assets/logIn&SignUp/${icon}" alt=""></span>
-        </div>`;
-}
-
-/**
- * Renders the two vacation day fields.
- * @param {string} idPrefix - "AddContact" or "EditContact".
- * @returns {string} The fields HTML.
- */
-function vacationRowTemplate(idPrefix) {
-  return `
-        <div class="vacation-row">
-          <div class="input-wrapper">
-            <input type="number" id="${idPrefix}VacationTakenInput" placeholder="Vacation taken" min="0" max="365" inputmode="numeric" aria-label="Vacation days taken">
-          </div>
-          <div class="input-wrapper">
-            <input type="number" id="${idPrefix}VacationTotalInput" placeholder="Vacation total" min="0" max="365" inputmode="numeric" aria-label="Vacation days total">
-          </div>
         </div>`;
 }

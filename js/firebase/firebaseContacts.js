@@ -6,53 +6,42 @@ import {
   collection,
   getDocs,
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-import { db, toDataWithId, getDocumentWithId } from "./firebase.js";
-import { seedDemoDataIfEmpty } from "./demoData.js";
+import { db, toDataWithId, getDocumentWithId, isGuestSession } from "./firebase.js";
+import { seedDemoDataIfEmpty, demoContacts } from "./demoData.js";
+import { getGuestContacts, saveGuestContact, deleteGuestContact } from "./guestContacts.js";
+import { isGuestEmail } from "../core/utility.js";
 
 /**
- * Creates or updates a contact document.
+ * Creates or updates a contact, the guest only changes its own demo contacts.
  * @param {string|null} docIdOrName - Document id, falls back to the name without spaces.
  * @param {string} name - Contact name.
  * @param {string} email - Email address.
  * @param {string} phoneNumber - Phone number.
  * @param {string} color - Avatar color.
- * @param {{taken: number, total: number}} [vacationDays] - Optional vacation days.
  * @returns {Promise<string>} The document id.
  */
-export async function editOrAddContact(docIdOrName, name, email, phoneNumber, color, vacationDays) {
+export async function editOrAddContact(docIdOrName, name, email, phoneNumber, color) {
   const docId = docIdOrName ?? name.replace(/\s+/g, "");
-  const contactData = buildContactData(name, email, phoneNumber, color, vacationDays);
-  await setDoc(doc(db, "contacts", docId), contactData, { merge: true });
+  const contactData = { name, email, phoneNumber, color };
+  if (await isGuestSession()) {
+    saveGuestContact({ id: docId, ...contactData });
+    return docId;
+  }
+  const timestamps = { updatedAt: serverTimestamp(), createdAt: serverTimestamp() };
+  await setDoc(doc(db, "contacts", docId), { ...contactData, ...timestamps }, { merge: true });
   return docId;
 }
 
 /**
- * Builds the document data for a contact.
- * @param {string} name - Contact name.
- * @param {string} email - Email address.
- * @param {string} phoneNumber - Phone number.
- * @param {string} color - Avatar color.
- * @param {{taken: number, total: number}} [vacationDays] - Optional vacation days.
- * @returns {Object} The contact data.
- */
-function buildContactData(name, email, phoneNumber, color, vacationDays) {
-  const contactData = {
-    name, email, phoneNumber, color,
-    updatedAt: serverTimestamp(),
-    createdAt: serverTimestamp(),
-  };
-  if (vacationDays) {
-    contactData.vacationDaysTaken = vacationDays.taken;
-    contactData.vacationDaysTotal = vacationDays.total;
-  }
-  return contactData;
-}
-
-/**
  * Deletes a contact and removes it from all tasks it was assigned to.
+ * The guest only removes it from its own demo contacts and leaves the shared tasks alone.
  * @param {string} uuid - Contact id.
  */
 export async function deleteContact(uuid) {
+  if (await isGuestSession()) {
+    deleteGuestContact(uuid);
+    return;
+  }
   const snapshot = await getDocs(collection(db, "tasks"));
   await Promise.all(unassignContactFromTasks(snapshot, uuid));
   await deleteDoc(doc(db, "contacts", uuid));
@@ -91,13 +80,24 @@ function removeAssigneeFromTask(taskDoc, uuid) {
 }
 
 /**
- * Loads all contacts, seeds demo data first if the database is empty.
- * @returns {Promise<Object[]>} All contacts.
+ * Loads the contacts: the guest gets its demo contacts, everyone else the real accounts.
+ * Seeds demo data first if the database is empty.
+ * @returns {Promise<Object[]>} The contacts.
  */
 export async function getContacts() {
+  if (await isGuestSession()) return getGuestContacts();
   await seedDemoDataIfEmpty();
   const snapshot = await getDocs(collection(db, "contacts"));
-  return snapshot.docs.map(toDataWithId);
+  return snapshot.docs.map(toDataWithId).filter(isRealContact);
+}
+
+/**
+ * Filters out the guest account and demo contacts that were stored by earlier versions.
+ * @param {Object} contact - The contact.
+ * @returns {boolean} True for a real contact.
+ */
+function isRealContact(contact) {
+  return !isGuestEmail(contact.email) && !demoContacts.some((demo) => demo.id === contact.id);
 }
 
 /**
