@@ -241,13 +241,24 @@ async function handleSignUp(event) {
 }
 
 /**
+ * Shows the loading state on the sign up button and blocks further clicks.
+ * @param {boolean} isLoading - True while the account is being created.
+ */
+function setSignUpLoading(isLoading) {
+  signUpBtn.disabled = isLoading;
+  signUpBtn.textContent = isLoading ? "Loading" : "Sign up";
+}
+
+/**
  * Creates the account and shows the result.
  */
 async function registerUser() {
+  setSignUpLoading(true);
   try {
     await createUser(emailInput.value.trim(), passwordInput.value, nameInput.value.trim());
     finishRegistration();
   } catch (error) {
+    setSignUpLoading(false);
     errorBox.textContent = error.message;
     showPopup(error.message || "Registration failed.");
   }
@@ -292,6 +303,14 @@ function initFieldValidation() {
 }
 
 /**
+ * Resets the button when the browser restores this page from its back/forward cache.
+ * @param {PageTransitionEvent} event - The pageshow event.
+ */
+function handlePageShow(event) {
+  if (event.persisted) setSignUpLoading(false);
+}
+
+/**
  * Connects all inputs and buttons of the sign up page.
  */
 function initSignup() {
@@ -300,6 +319,7 @@ function initSignup() {
   setupPasswordToggle(passwordInput, getToggleIcon(passwordInput));
   setupPasswordToggle(confirmInput, getToggleIcon(confirmInput));
   signUpBtn.addEventListener("click", handleSignUp);
+  window.addEventListener("pageshow", handlePageShow);
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     signUpBtn.click();
