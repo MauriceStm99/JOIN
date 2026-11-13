@@ -144,13 +144,6 @@
     text-align: center;
   }
 
-  .summary-divider-horizontal {
-    width: 120px;
-    height: 4px;
-    background-color: #29abe2;
-    border-radius: 2px;
-  }
-
   .header-title {
     display: none;
   }
@@ -172,8 +165,7 @@
     white-space: normal;
   }
 
-  .summary-subtitle,
-  .summary-divider {
+  .summary-subtitle {
     display: none;
   }
 

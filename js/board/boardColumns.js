@@ -19,15 +19,6 @@ export function getColumnForProgress(progress) {
 }
 
 /**
- * Returns the id of the task container of a progress state, unknown states go to "To do".
- * @param {string} progress - The progress state.
- * @returns {string} The container id.
- */
-export function getTasksContainerId(progress) {
-  return COLUMNS.find((column) => column.progress === progress)?.id || "todoColumn";
-}
-
-/**
  * Returns the progress state that belongs to a task container.
  * @param {HTMLElement} dropZone - The task container.
  * @returns {string|undefined} The progress state.

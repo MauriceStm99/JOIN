@@ -51,9 +51,6 @@
     font-size: 40px;
     padding-top: calc(105px - 0.23em);
   }
-  .add-task-form-overlay {
-    flex-direction: column;
-  }
 }
 
 @media (max-width: 900px) {

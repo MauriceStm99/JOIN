@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-import { doc, setDoc, deleteDoc, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { doc, setDoc, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 import { auth, db, getDocumentWithId } from "./firebase.js";
 import { editOrAddContact } from "./firebaseContacts.js";
 
@@ -70,19 +70,6 @@ function buildNewUserProfile(username, email) {
  */
 function generateRandomColor() {
   return PROFILE_COLORS[Math.floor(Math.random() * PROFILE_COLORS.length)];
-}
-
-/**
- * Deletes the logged-in user account and its profile document.
- * @param {string} uid - User id.
- */
-export async function deleteUserProfile(uid) {
-  const user = auth.currentUser;
-  if (!user) {
-    throw new Error("No user is currently logged in.");
-  }
-  await user.delete();
-  await deleteDoc(doc(db, "users", uid));
 }
 
 /**

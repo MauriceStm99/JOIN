@@ -221,11 +221,6 @@ body {
   border: 2px solid var(--lightBlue-default);
 }
 
-.select-wrapper {
-  position: relative;
-  width: 100%;
-}
-
 #categorySelect {
   -webkit-appearance: none;
   -moz-appearance: none;

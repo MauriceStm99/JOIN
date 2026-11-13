@@ -5,11 +5,6 @@ import { renderTasks, setBoardContacts } from "./boardRender.js";
 import { checkColumnVisibility } from "./boardColumns.js";
 import { handleTaskCardClick, closeOverlayOnBtn } from "./boardDetail.js";
 import { initDragAndDrop } from "./dragDrop/boardDragDrop.js";
-import {
-  initAddTaskOverlay,
-  closeAddTaskOverlay,
-  populateOverlayContacts,
-} from "./addOverlay/boardAddOverlay.js";
 import { openEditTaskOverlay, closeEditOverlay } from "./editTask/boardEditTask.js";
 
 const overlay = document.getElementById("taskDetailOverlay");
@@ -19,7 +14,6 @@ const overlay = document.getElementById("taskDetailOverlay");
  */
 async function initBoard() {
   initBoardInteractions();
-  initAddTaskOverlay();
   const [tasksResult, contactsResult] = await Promise.allSettled([getAllTasks(), getContacts()]);
   applyContactsResult(contactsResult);
   applyTasksResult(tasksResult);
@@ -46,7 +40,6 @@ function initBoardInteractions() {
 function applyContactsResult(result) {
   if (result.status === "fulfilled") {
     setBoardContacts(result.value);
-    populateOverlayContacts();
   } else {
     setBoardContacts([]);
     showPopup("Contacts could not be loaded for the board.", "info");
@@ -103,15 +96,11 @@ function initEscapeKeyClose() {
 }
 
 /**
- * Closes the add overlay, the edit form or the detail view, in this order.
+ * Closes the edit form or the detail view, in this order.
  * @param {KeyboardEvent} event - The keydown event.
  */
 function handleEscapeKey(event) {
   if (event.key !== "Escape") return;
-  if (document.getElementById("addTaskOverlay")?.classList.contains("active")) {
-    closeAddTaskOverlay();
-    return;
-  }
   if (!overlay?.classList.contains("active")) return;
   if (overlay.querySelector(".edit-overlay-card")) {
     closeEditOverlay();

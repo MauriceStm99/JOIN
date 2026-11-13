@@ -324,12 +324,3 @@ export function addSubtaskToDetailTemplate(text, completed = false, index) {
     </label>
   `;
 }
-
-/**
- * Renders the detail view, kept for older calls of the edit template.
- * @param {Object} task - The task.
- * @returns {string} The detail HTML.
- */
-export function editTaskTemplate(task) {
-  return taskDetailTemplate(task);
-}

@@ -17,15 +17,6 @@ const RANDOM_COLORS = [
 ];
 
 /**
- * Removes all whitespace from a string.
- * @param {string} str - The input string.
- * @returns {string} The string without whitespace.
- */
-export function removeWhitespace(str) {
-  return str.replace(/\s+/g, "");
-}
-
-/**
  * Escapes HTML special characters so a value can be inserted into markup safely.
  * @param {*} value - Any value, null and undefined become an empty string.
  * @returns {string} The escaped string.
@@ -182,24 +173,4 @@ export function getStoredCurrentUser() {
  */
 export function isGuestEmail(email) {
   return email === GUEST_EMAIL;
-}
-
-/**
- * Finds the position of a task in a list.
- * @param {string} id - Task id.
- * @param {Object[]} tasksList - All tasks.
- * @returns {number} The index or -1.
- */
-export function getTaskIndexById(id, tasksList) {
-  return tasksList.findIndex((task) => task.id === id);
-}
-
-/**
- * Returns all tasks that are assigned to a contact.
- * @param {Object[]} tasksList - All tasks.
- * @param {string} uid - Contact id.
- * @returns {Object[]} The assigned tasks.
- */
-export function getAllTasksFromContacts(tasksList, uid) {
-  return tasksList.filter((task) => task.assignedTo.includes(uid));
 }

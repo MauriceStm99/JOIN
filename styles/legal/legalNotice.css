@@ -3,11 +3,6 @@
     padding-left: 330px;
     padding-right: 65px;
   }
-  
-  .legal-area {
-    max-width: 1014px;
-    padding-top: 32px;
-  }
 
   .legal-section {
     max-width: 1014px;
@@ -62,7 +57,6 @@
     display: flex;
     gap: 24px;
   }
-  
 
   @media (max-width: 1200px) {
     .userProfileInitials{
@@ -225,11 +219,6 @@
     margin-bottom: 4px; /* Abstand Icon â†’ Text */
   }
 
-  .mobile-nav .nav-right {
-    display: flex;
-    gap: 20px; /* Abstand zwischen Privacy und Legal */
-  }
-
   .mobile-nav .nav-item-text:hover span {
     background-color: #091931;
   }
@@ -242,15 +231,6 @@
   }
 
     .header-title {
-      display: none;
-    }
-    
-    .header-logo {
-      width: 32px;
-      height: 39px;
-    }
-
-    .header-right{
       display: none;
     }
     

@@ -1,12 +1,3 @@
-    display: none;
-}
-
-.board-header-responsive {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .header-logo-small {
     display: none;
 }
@@ -35,10 +26,6 @@
 
     .kanban-column {
         width: calc(50% - 9px);
-    }
-
-    .overlay-add-task-card {
-        margin: 20px;
     }
 }
 
@@ -121,16 +108,6 @@
     .add-column-btn-svg {
         width: 30px;
         height: 30px;
-    }
-}
-
-@media (max-width: 960px) {
-    .add-task-form-overlay {
-        flex-direction: column;
-    }
-
-    .form-divider {
-        display: none;
     }
 }
 
@@ -299,42 +276,9 @@
         font-size: 16px;
     }
 
-    .overlay-add-task-card{
-        padding: 32px 24px 32px 24px;
-    }
-
-    .form-group label{
-        font-size: 16px;
-    }
-
-    .add-task-form-overlay{
-        gap: 24px;
-    }
-
-    .add-task-actions{
-        margin-top: 0px;
-    }
-
-    .btn-create{
-        font-size: 16px;
-    }
-
-    .btn-cancel{
-        font-size: 16px;
-    }
-
-    .priority-button {
-        font-size: 16px;
-    }
-
     .priority-icon{
         width: 16px;
         height: 16px;
-    }
-
-    .priority-button {
-        width: 120px;
-        height: 40px;
     }
 
     .kanban-board {
@@ -383,18 +327,5 @@
         justify-content: flex-end;
         gap: 12px;
         align-items: center;
-    }
-}
-
-@media (max-width: 460px) {
-    .priority-button-group{
-        flex-direction: row;
-        gap: 8px;
-    }
-
-    .priority-button {
-        font-size: 16px;
-        gap: 4px;
-        padding: 0 4px;
     }
 }

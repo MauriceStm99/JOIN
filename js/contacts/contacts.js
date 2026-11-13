@@ -9,7 +9,6 @@ import {
   closeEditContactOverlay,
 } from "./contactsDialogs.js";
 
-export { getContactsArray } from "./contactsList.js";
 
 /**
  * Opens the edit dialog when the edit button of the detail view is clicked.

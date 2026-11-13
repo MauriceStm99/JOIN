@@ -105,15 +105,6 @@ export async function getAllTasks() {
 }
 
 /**
- * Loads the ids of all tasks.
- * @returns {Promise<string[]>} All task ids.
- */
-export async function getTaskIds() {
-  const snapshot = await getDocs(collection(db, "tasks"));
-  return snapshot.docs.map((taskDoc) => taskDoc.id);
-}
-
-/**
  * Counts all and completed subtasks of a task.
  * @param {string} taskId - Task id.
  * @returns {Promise<{totalSubtasks: number, completedSubtasks: number}>} The counts.

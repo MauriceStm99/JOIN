@@ -27,38 +27,6 @@ h3 {
   font-weight: 700;
   color: black;
 }
-
-.mb-16 {
-  margin-bottom: 16px;
-}
-
-.mb-24 {
-  margin-bottom: 24px;
-}
-
-.mb-28 {
-  margin-bottom: 28px;
-}
-
-.mb-30 {
-  margin-bottom: 30px;
-}
-
-.mb-34 {
-  margin-bottom: 34px;
-}
-
-.mb-36 {
-  margin-bottom: 36px;
-} 
-
-.mb-50 {
-  margin-bottom: 50px;
-}
-
-.pr-110{
-  padding-right: 110px;
-}
 .hide{
   display: none;
 }
@@ -68,24 +36,14 @@ h3 {
   --orange-default: #ff7a00;
   --pink-default: #FF5EB3;
   --purpleViolett-default: #6E52FF;
-  --pruple-default: #9327FF;
-  --cyan-default: #00BEE8;
   --aquamarine-default: #1FD7C1;
-  --coral-default: #FF745E;
   --orange-default: #FFA35E;
-  --magenta-default: #FC71FF;
   --yellow-default: #FFC701;
-  --blue-default: #0038FF;
-  --lime-default: #C3FF2B;
-  --lemonYellow-default: #C3FF2B;
-  --red-default: #C3FF2B;
-  --amber-default: #FFBB2B;
   --lightGray-default: #D1D1D1;
   --veryLightGray-default: #F4F4F4;
   --skyBlue-default: #2AABE2;
   --lightBlue-default: #29ABE2;
   --mainColor-default: #2A3647;
-  --midnightBlue-default: #091931;
 }
 
 html {
@@ -272,10 +230,6 @@ body {
   }
 }
 
-.content-wrap {
-  flex: 1;
-}
-
 .help {
   background: url(../assets/sideboardAssets/helpIcon.svg);
   background-size: contain;
@@ -322,14 +276,6 @@ body {
 
 .join-text {
   color: var(--skyBlue-default);
-}
-.btnRemoveBackground {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  text-decoration: underline;
-  padding: 0;
 }
 
 .profileShowMore{
@@ -485,12 +431,3 @@ body {
     background-color: #D1D1D1;
     margin: 0 4px;
 }
-
-
-
-
-
-
-
-
-

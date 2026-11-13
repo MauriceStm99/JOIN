@@ -8,14 +8,6 @@ let contacts = [];
 let currentShownContact = null;
 
 /**
- * Returns all loaded contacts.
- * @returns {Object[]} The contacts.
- */
-export function getContactsArray() {
-  return contacts;
-}
-
-/**
  * Returns the contact whose details are shown.
  * @returns {Object|null} The contact or null.
  */

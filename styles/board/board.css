@@ -1,5 +1,5 @@
 @import "./boardLayout.css";
 @import "./boardDetailOverlay.css";
-@import "./boardAddOverlay.css";
+@import "./boardFormElements.css";
 @import "../boardEdit/boardEditOverlay.css";
 @import "./boardResponsive.css";
