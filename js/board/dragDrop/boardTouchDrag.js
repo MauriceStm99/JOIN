@@ -178,15 +178,16 @@ function updatePosition(card, touch) {
  * @param {HTMLElement} card - The task card.
  */
 function startAutoScroll(card) {
-  const state = getTouchState(card);
-  /**
-   * Scrolls one step and plans the next one.
-   */
-  function step() {
-    autoScrollStep(card);
-    state.autoScrollFrame = requestAnimationFrame(step);
-  }
-  state.autoScrollFrame = requestAnimationFrame(step);
+  getTouchState(card).autoScrollFrame = requestAnimationFrame(() => autoScrollFrame(card));
+}
+
+/**
+ * Scrolls one step and plans the next animation frame.
+ * @param {HTMLElement} card - The task card.
+ */
+function autoScrollFrame(card) {
+  autoScrollStep(card);
+  getTouchState(card).autoScrollFrame = requestAnimationFrame(() => autoScrollFrame(card));
 }
 
 /**

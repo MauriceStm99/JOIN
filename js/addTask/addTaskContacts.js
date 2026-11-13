@@ -51,12 +51,20 @@ export function getAssignDisplayName(contact, currentUser) {
  */
 export function renderAssignOptions(container, contacts) {
   const currentUser = getStoredCurrentUser();
-  sortContactsForAssignment(contacts, currentUser).forEach((contact) => {
-    if (!contact?.id || !contact?.name) return;
-    const icon = iconTemplate(getInitials(contact.name), contact.color, "assignedToCheckboxIcon");
-    const option = addAssignedToBarTask(getAssignDisplayName(contact, currentUser), contact.id, icon);
-    container.insertAdjacentHTML("beforeend", option);
-  });
+  sortContactsForAssignment(contacts, currentUser).forEach((contact) => appendAssignOption(container, contact, currentUser));
+}
+
+/**
+ * Adds the checkbox of one contact to the "Assigned to" list, contacts without id or name are skipped.
+ * @param {HTMLElement} container - The list.
+ * @param {Object} contact - The contact.
+ * @param {Object|null} currentUser - The logged in user, marked with "(You)".
+ */
+function appendAssignOption(container, contact, currentUser) {
+  if (!contact?.id || !contact?.name) return;
+  const icon = iconTemplate(getInitials(contact.name), contact.color, "assignedToCheckboxIcon");
+  const option = addAssignedToBarTask(getAssignDisplayName(contact, currentUser), contact.id, icon);
+  container.insertAdjacentHTML("beforeend", option);
 }
 
 /**

@@ -20,13 +20,24 @@ function populateContactList(listEl, task) {
   const assignedIds = getAssignedIds(task);
   listEl.innerHTML = "";
   sortContactsForAssignment([...getBoardContacts()], currentUser).forEach((contact) => {
-    const avatarIcon = iconTemplate(getInitials(contact.name), contact.color);
-    const displayName = getAssignDisplayName(contact, currentUser);
-    const label = document.createElement("label");
-    label.className = "checkbox-item";
-    label.innerHTML = editAssignOptionTemplate(displayName, contact.id, avatarIcon, assignedIds.includes(contact.id));
-    listEl.appendChild(label);
+    listEl.appendChild(createContactCheckbox(contact, currentUser, assignedIds));
   });
+}
+
+/**
+ * Creates the checkbox of one contact for the edit form.
+ * @param {Object} contact - The contact.
+ * @param {Object|null} currentUser - The logged in user, marked with "(You)".
+ * @param {string[]} assignedIds - Ids of the assigned contacts, their checkbox is checked.
+ * @returns {HTMLLabelElement} The checkbox with its label.
+ */
+function createContactCheckbox(contact, currentUser, assignedIds) {
+  const avatarIcon = iconTemplate(getInitials(contact.name), contact.color);
+  const displayName = getAssignDisplayName(contact, currentUser);
+  const label = document.createElement("label");
+  label.className = "checkbox-item";
+  label.innerHTML = editAssignOptionTemplate(displayName, contact.id, avatarIcon, assignedIds.includes(contact.id));
+  return label;
 }
 
 /**

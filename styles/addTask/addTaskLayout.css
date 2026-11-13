@@ -40,10 +40,11 @@ body {
   min-width: 0;
 }
 
+/* 0.23em is the empty space above the letters, so the visible gap to the header stays 42px for every title size. */
 .add-task-wrapper h1 {
   font-size: 61px;
   font-weight: 700;
-  padding-top: 108px;
+  padding-top: calc(117px - 0.23em);
 }
 
 .add-task-buttons {

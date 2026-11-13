@@ -204,6 +204,14 @@ function getCategoryTask() {
 }
 
 /**
+ * Reads the board column the page was opened from, e.g. addTask.html?status=inProgress.
+ * @returns {string|null} The column, or null for the default column To do.
+ */
+function getStatusFromUrl() {
+  return new URLSearchParams(window.location.search).get("status");
+}
+
+/**
  * Collects all values of the form.
  * @returns {Object} The new task.
  */
@@ -216,6 +224,7 @@ function collectTaskData() {
     assignedTo: getSelectedAssignedTo(),
     category: getCategoryTask(),
     subtasks: getSubtasksList(),
+    progress: getStatusFromUrl(),
   };
 }
 

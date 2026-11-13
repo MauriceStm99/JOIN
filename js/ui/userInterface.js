@@ -1,6 +1,5 @@
-import { onAuthChange, logout } from "../firebase/firebase.js";
+import { onAuthChange } from "../firebase/firebase.js";
 import { getUsername } from "../firebase/firebaseUsers.js";
-import { showPopup } from "./feedback.js";
 import { getStoredCurrentUser, isGuestEmail } from "../core/utility.js";
 
 const PUBLIC_PAGES = ["", "index.html", "signUp.html"];
@@ -92,31 +91,12 @@ export function editProfileInitials() {
 }
 
 /**
- * Logs the user out and returns to the login page.
+ * Shows the stored guest state and the initials, then follows every login change.
+ * The buttons of the profile menu are connected in profilePopup.js, which also renders the menu.
  */
-function logoutUser() {
-  logout()
-    .then(() => {
-      window.location.href = "../../index.html";
-    })
-    .catch((error) => {
-      showPopup("Logout failed: " + (error.message || "Unknown error"));
-    });
+function initUserInterface() {
+  applyStoredGuestState();
+  onAuthChange(handleAuthChange);
 }
 
-/**
- * Connects the legal and logout buttons of the profile menu.
- */
-function addEventListenersToProfileButtons() {
-  document.getElementById("privacySettingsBtn")?.addEventListener("click", () => {
-    window.location.href = "../legal/privacyPolicyInt.html";
-  });
-  document.getElementById("legalNoticeBtn")?.addEventListener("click", () => {
-    window.location.href = "../legal/legalNoticeInt.html";
-  });
-  document.getElementById("logoutBtn")?.addEventListener("click", logoutUser);
-}
-
-applyStoredGuestState();
-onAuthChange(handleAuthChange);
-document.addEventListener("DOMContentLoaded", addEventListenersToProfileButtons);
+document.addEventListener("DOMContentLoaded", initUserInterface);

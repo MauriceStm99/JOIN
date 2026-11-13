@@ -11,7 +11,7 @@
   }
   .add-task-wrapper h1 {
     font-size: 48px;
-    padding-top: 100px;
+    padding-top: calc(105px - 0.23em);
   }
 }
 
@@ -49,7 +49,7 @@
   }
   .add-task-wrapper h1 {
     font-size: 40px;
-    padding-top: 80px;
+    padding-top: calc(105px - 0.23em);
   }
   .add-task-form-overlay {
     flex-direction: column;
@@ -106,7 +106,7 @@
 
   .add-task-wrapper h1 {
     font-size: 32px;
-    padding-top: 80px;
+    padding-top: calc(113px - 0.23em);
   }
 
   .task-input,
@@ -223,9 +223,5 @@
   .add-task-wrapper {
     gap: 12px;
     padding-bottom: 0;
-  }
-
-  .add-task-wrapper h1 {
-    padding-top: 100px;
   }
 }

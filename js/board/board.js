@@ -7,7 +7,6 @@ import { handleTaskCardClick, closeOverlayOnBtn } from "./boardDetail.js";
 import { initDragAndDrop } from "./dragDrop/boardDragDrop.js";
 import {
   initAddTaskOverlay,
-  openAddTaskOverlay,
   closeAddTaskOverlay,
   populateOverlayContacts,
 } from "./addOverlay/boardAddOverlay.js";
@@ -81,13 +80,19 @@ function initTaskCardClicks() {
  * Opens the detail view of a focused card with Enter or Space.
  */
 function initTaskCardKeyboard() {
-  document.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    const card = event.target.closest?.(".task-card");
-    if (!card || event.target !== card) return;
-    event.preventDefault();
-    handleTaskCardClick(event, card);
-  });
+  document.addEventListener("keydown", handleTaskCardKeydown);
+}
+
+/**
+ * Opens the detail view when Enter or Space is pressed on a focused card.
+ * @param {KeyboardEvent} event - The keydown event.
+ */
+function handleTaskCardKeydown(event) {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  const card = event.target.closest?.(".task-card");
+  if (!card || event.target !== card) return;
+  event.preventDefault();
+  handleTaskCardClick(event, card);
 }
 
 /**
@@ -168,5 +173,13 @@ function cardMatchesSearch(card, searchText) {
   return searchText === "" || title.includes(searchText) || description.includes(searchText);
 }
 
-window.openAddTaskOverlay = openAddTaskOverlay;
+/**
+ * Opens the add task page for a column.
+ * @param {string} status - Column of the new task.
+ */
+function openAddTaskPage(status) {
+  window.location.href = `addTask.html?status=${encodeURIComponent(status)}`;
+}
+
+window.openAddTaskPage = openAddTaskPage;
 document.addEventListener("DOMContentLoaded", initBoard);

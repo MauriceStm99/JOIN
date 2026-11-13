@@ -1,5 +1,5 @@
   .main-content-legal{
-    padding-top: 220px;
+    padding-top: 123px;
     padding-left: 330px;
     padding-right: 65px;
   }
@@ -74,6 +74,10 @@
   @media (max-width: 900px){
     h1 {
       font-size: 48px;
+    }
+
+    .main-content-legal {
+      padding-top: 125px;
     }
   }
 
@@ -160,7 +164,7 @@
     .main-content-legal {
       margin-left: 0;
       width: 100%;
-      padding: 120px 16px 100px;
+      padding: 125px 16px 100px;
     }
   
     .header {
@@ -268,5 +272,12 @@
   @media (min-width: 769px) {
     .header-logo-small {
       display: none;
+    }
+  }
+
+  /* Smaller titles have less space above their letters, so the gap to the header stays 42px. */
+  @media (max-width: 700px) {
+    .main-content-legal {
+      padding-top: 129px;
     }
   }

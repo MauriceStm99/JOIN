@@ -7,8 +7,7 @@ import {
   getDocs,
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 import { db, toDataWithId, getDocumentWithId, isGuestSession } from "./firebase.js";
-import { seedDemoDataIfEmpty, demoContacts } from "./demoData.js";
-import { getGuestContacts, saveGuestContact, deleteGuestContact } from "./guestContacts.js";
+import { getGuestContacts, saveGuestContact, deleteGuestContact, loadDemoContacts } from "./guestContacts.js";
 import { isGuestEmail } from "../core/utility.js";
 
 /**
@@ -24,7 +23,7 @@ export async function editOrAddContact(docIdOrName, name, email, phoneNumber, co
   const docId = docIdOrName ?? name.replace(/\s+/g, "");
   const contactData = { name, email, phoneNumber, color };
   if (await isGuestSession()) {
-    saveGuestContact({ id: docId, ...contactData });
+    await saveGuestContact({ id: docId, ...contactData });
     return docId;
   }
   const timestamps = { updatedAt: serverTimestamp(), createdAt: serverTimestamp() };
@@ -39,7 +38,7 @@ export async function editOrAddContact(docIdOrName, name, email, phoneNumber, co
  */
 export async function deleteContact(uuid) {
   if (await isGuestSession()) {
-    deleteGuestContact(uuid);
+    await deleteGuestContact(uuid);
     return;
   }
   const snapshot = await getDocs(collection(db, "tasks"));
@@ -81,23 +80,26 @@ function removeAssigneeFromTask(taskDoc, uuid) {
 
 /**
  * Loads the contacts: the guest gets its demo contacts, everyone else the real accounts.
- * Seeds demo data first if the database is empty.
  * @returns {Promise<Object[]>} The contacts.
  */
 export async function getContacts() {
   if (await isGuestSession()) return getGuestContacts();
-  await seedDemoDataIfEmpty();
-  const snapshot = await getDocs(collection(db, "contacts"));
-  return snapshot.docs.map(toDataWithId).filter(isRealContact);
+  const [snapshot, demoContacts] = await Promise.all([
+    getDocs(collection(db, "contacts")),
+    loadDemoContacts().catch(() => []),
+  ]);
+  const demoIds = new Set(demoContacts.map((contact) => contact.id));
+  return snapshot.docs.map(toDataWithId).filter((contact) => isRealContact(contact, demoIds));
 }
 
 /**
- * Filters out the guest account and demo contacts that were stored by earlier versions.
+ * Filters out the guest account and demo contacts that earlier versions stored in "contacts".
  * @param {Object} contact - The contact.
+ * @param {Set<string>} demoIds - Ids of the demo contacts.
  * @returns {boolean} True for a real contact.
  */
-function isRealContact(contact) {
-  return !isGuestEmail(contact.email) && !demoContacts.some((demo) => demo.id === contact.id);
+function isRealContact(contact, demoIds) {
+  return !isGuestEmail(contact.email) && !demoIds.has(contact.id);
 }
 
 /**

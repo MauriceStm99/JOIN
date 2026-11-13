@@ -8,13 +8,19 @@ let dragActivateTimer = null;
  */
 export function initDragAndDrop() {
   document.querySelectorAll('[draggable="true"]').forEach((card) => attachDragHandlers(card));
-  document.querySelectorAll(".kanban-column").forEach((zone) => {
-    zone.addEventListener("dragover", handleDragOver);
-    zone.addEventListener("dragenter", handleDragEnter);
-    zone.addEventListener("dragleave", handleDragLeave);
-    zone.addEventListener("drop", handleDrop);
-  });
+  document.querySelectorAll(".kanban-column").forEach((zone) => initDropZone(zone));
   document.addEventListener("dragend", handleDragEnd);
+}
+
+/**
+ * Makes a column a drop zone for task cards.
+ * @param {HTMLElement} zone - The column.
+ */
+function initDropZone(zone) {
+  zone.addEventListener("dragover", handleDragOver);
+  zone.addEventListener("dragenter", handleDragEnter);
+  zone.addEventListener("dragleave", handleDragLeave);
+  zone.addEventListener("drop", handleDrop);
 }
 
 /**

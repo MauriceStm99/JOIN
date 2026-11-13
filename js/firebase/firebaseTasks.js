@@ -7,7 +7,6 @@ import {
   getDocs,
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 import { auth, db, toDataWithId, getDocumentWithId } from "./firebase.js";
-import { seedDemoDataIfEmpty } from "./demoData.js";
 
 const TASK_PROGRESS_STATES = ["toDo", "inProgress", "awaitFeedback", "done"];
 
@@ -33,11 +32,11 @@ export async function createTask(task) {
  * @returns {Object} The task data.
  */
 function buildNewTask(task, uid) {
-  const { title, description, dueDate, priority, subtasks, assignedTo, category } = task;
+  const { title, description, dueDate, priority, subtasks, assignedTo, category, progress } = task;
   return {
     title, description, dueDate, priority, subtasks, assignedTo, category,
     createdBy: uid,
-    progress: "toDo",
+    progress: TASK_PROGRESS_STATES.includes(progress) ? progress : "toDo",
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   };
@@ -97,11 +96,10 @@ export function getTask(taskId) {
 }
 
 /**
- * Loads all tasks, seeds demo data first if the database is empty.
+ * Loads all tasks.
  * @returns {Promise<Object[]>} All tasks.
  */
 export async function getAllTasks() {
-  await seedDemoDataIfEmpty();
   const snapshot = await getDocs(collection(db, "tasks"));
   return snapshot.docs.map(toDataWithId);
 }

@@ -47,33 +47,44 @@ function startEditingSubtask(subtaskNode) {
  * @param {HTMLElement} textSpan - Its editable text.
  */
 function watchSubtaskEditEnd(subtaskNode, textSpan) {
-  /**
-   * Ends the editing and stops listening for outside clicks.
-   */
-  function closeEdit() {
-    disableEditableSubtask(subtaskNode);
-    document.removeEventListener("click", handleOutsideClick);
-  }
-  /**
-   * Ends the editing when the click was outside of this subtask.
-   * @param {MouseEvent} event - The click event.
-   */
-  function handleOutsideClick(event) {
-    if (event.target.closest(".subtask-label") !== subtaskNode) closeEdit();
-  }
-  setTimeout(() => document.addEventListener("click", handleOutsideClick), 0);
-  textSpan.addEventListener("keydown", (event) => closeEditOnEnter(event, closeEdit), { once: true });
+  const listening = new AbortController();
+  const { signal } = listening;
+  setTimeout(() => {
+    document.addEventListener("click", (event) => closeEditOnOutsideClick(event, subtaskNode, listening), { signal });
+  }, 0);
+  textSpan.addEventListener("keydown", (event) => closeEditOnEnter(event, subtaskNode, listening), { signal });
 }
 
 /**
- * Calls closeEdit when Enter was pressed.
- * @param {KeyboardEvent} event - The keydown event.
- * @param {Function} closeEdit - Ends the editing.
+ * Ends the editing and removes the click and key listeners of this editing.
+ * @param {HTMLElement} subtaskNode - The subtask.
+ * @param {AbortController} listening - Removes the listeners.
  */
-function closeEditOnEnter(event, closeEdit) {
+function closeSubtaskEdit(subtaskNode, listening) {
+  disableEditableSubtask(subtaskNode);
+  listening.abort();
+}
+
+/**
+ * Ends the editing when the click was outside of this subtask.
+ * @param {MouseEvent} event - The click event.
+ * @param {HTMLElement} subtaskNode - The subtask.
+ * @param {AbortController} listening - Removes the listeners.
+ */
+function closeEditOnOutsideClick(event, subtaskNode, listening) {
+  if (event.target.closest(".subtask-label") !== subtaskNode) closeSubtaskEdit(subtaskNode, listening);
+}
+
+/**
+ * Ends the editing when Enter was pressed.
+ * @param {KeyboardEvent} event - The keydown event.
+ * @param {HTMLElement} subtaskNode - The subtask.
+ * @param {AbortController} listening - Removes the listeners.
+ */
+function closeEditOnEnter(event, subtaskNode, listening) {
   if (event.key !== "Enter") return;
   event.preventDefault();
-  closeEdit();
+  closeSubtaskEdit(subtaskNode, listening);
 }
 
 /**

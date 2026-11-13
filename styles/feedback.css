@@ -1,0 +1,92 @@
+/* Messages of js/ui/feedback.js. This file is linked last on every page, so these rules win over page styles. */
+
+/* Popup in the top right corner (showPopup). */
+dialog.app-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  left: auto;
+  bottom: auto;
+  margin: 0;
+  z-index: 12000;
+  width: auto;
+  height: auto;
+  min-width: 280px;
+  max-width: 420px;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.35;
+  font-weight: 500;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.app-popup.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.app-popup.error {
+  background: #c62828;
+}
+
+.app-popup.success {
+  background: #2e7d32;
+}
+
+.app-popup.info {
+  background: #2a3647;
+}
+
+@media (max-width: 600px) {
+  dialog.app-popup {
+    right: 12px;
+    left: 12px;
+    top: 12px;
+    min-width: auto;
+    max-width: none;
+  }
+}
+
+/* Toast in the middle of the screen after a task was added (showBoardToast). */
+.board-toast {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, 150vh);
+  background: #2a3647;
+  color: #fff;
+  padding: 22px 30px;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: 500;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+  z-index: 13000;
+  white-space: nowrap;
+  transition: transform 350ms ease-out;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.board-toast img {
+  width: 28px;
+  height: 28px;
+}
+
+.board-toast.show {
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 600px) {
+  .board-toast {
+    font-size: 17px;
+    padding: 18px 24px;
+  }
+}

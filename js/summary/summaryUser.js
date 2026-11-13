@@ -198,5 +198,12 @@ function fadeOutSplash(splash, main) {
   }, 500);
 }
 
-document.addEventListener("DOMContentLoaded", loadSummary);
-document.addEventListener("DOMContentLoaded", showMobileSplash);
+/**
+ * Loads the summary and shows the greeting splash on small screens.
+ */
+function initSummaryPage() {
+  loadSummary();
+  showMobileSplash();
+}
+
+document.addEventListener("DOMContentLoaded", initSummaryPage);

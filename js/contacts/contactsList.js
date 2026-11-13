@@ -64,14 +64,22 @@ function sortContactsByName(contactList) {
  */
 function groupContacts(contactList) {
   const grouped = {};
-  sortContactsByName(contactList).forEach((contact) => {
-    contact._index = contactList.indexOf(contact);
-    contact.initials = getContactInitials(contact.name || "");
-    const letter = getGroupLetter(contact.name);
-    if (!grouped[letter]) grouped[letter] = [];
-    grouped[letter].push(contact);
-  });
+  sortContactsByName(contactList).forEach((contact) => addContactToGroup(grouped, contact, contactList));
   return grouped;
+}
+
+/**
+ * Stores index and initials of a contact and adds it to the group of its first letter.
+ * @param {Object<string, Object[]>} grouped - Contacts per letter.
+ * @param {Object} contact - The contact.
+ * @param {Object[]} contactList - The unsorted contacts, used for the index.
+ */
+function addContactToGroup(grouped, contact, contactList) {
+  contact._index = contactList.indexOf(contact);
+  contact.initials = getContactInitials(contact.name || "");
+  const letter = getGroupLetter(contact.name);
+  if (!grouped[letter]) grouped[letter] = [];
+  grouped[letter].push(contact);
 }
 
 /**

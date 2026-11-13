@@ -222,4 +222,4 @@ function initLogin() {
   form?.addEventListener("submit", handleFormSubmit);
 }
 
-initLogin();
+document.addEventListener("DOMContentLoaded", initLogin);

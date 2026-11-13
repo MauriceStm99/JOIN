@@ -1,5 +1,6 @@
 import { profileTemplate, profileTemplateSimple } from "../../templates/profileTemplates.js";
 import { logout } from "../firebase/firebase.js";
+import { showPopup } from "./feedback.js";
 
 const SIMPLE_PROFILE_PAGES = [
   "addTask.html",
@@ -128,7 +129,9 @@ function navigateTo(url) {
  * Logs the user out and returns to the login page.
  */
 function logoutAndRedirect() {
-  logout().then(() => navigateTo("../../index.html"));
+  logout()
+    .then(() => navigateTo("../../index.html"))
+    .catch((error) => showPopup("Logout failed: " + (error.message || "Unknown error")));
 }
 
 /**
@@ -161,6 +164,13 @@ function initProfileMenu() {
   document.addEventListener("click", () => profileMenu.classList.add("d-none"));
 }
 
-initBackButtons();
-highlightActiveMobileNav();
-initProfileMenu();
+/**
+ * Sets up the back arrows, the mobile navigation and the profile menu of the page.
+ */
+function initPageNavigation() {
+  initBackButtons();
+  highlightActiveMobileNav();
+  initProfileMenu();
+}
+
+document.addEventListener("DOMContentLoaded", initPageNavigation);

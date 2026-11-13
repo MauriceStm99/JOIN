@@ -75,4 +75,4 @@ function initContactsPage() {
   document.getElementById("profileShowMore")?.addEventListener("click", handleProfileMenuClick);
 }
 
-initContactsPage();
+document.addEventListener("DOMContentLoaded", initContactsPage);

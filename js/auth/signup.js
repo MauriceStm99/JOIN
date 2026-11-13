@@ -324,4 +324,4 @@ function initSignup() {
   });
 }
 
-initSignup();
+document.addEventListener("DOMContentLoaded", initSignup);

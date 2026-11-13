@@ -83,16 +83,14 @@ function isInsideAny(node, elements) {
  */
 export function initOutsideClickHandler(target, onClose, ignore = []) {
   if (!target) return;
-  /**
-   * Closes on an outside click and removes itself afterwards.
-   * @param {MouseEvent} event - The click event.
-   */
-  function handleClick(event) {
-    if (isInsideAny(event.target, [target, ...ignore])) return;
-    onClose?.();
-    document.removeEventListener("click", handleClick, true);
-  }
-  requestAnimationFrame(() => document.addEventListener("click", handleClick, true));
+  const listening = new AbortController();
+  const insideElements = [target, ...ignore];
+  requestAnimationFrame(() => {
+    document.addEventListener("click", (event) => closeOnClickOutside(event, insideElements, onClose, listening), {
+      capture: true,
+      signal: listening.signal,
+    });
+  });
 }
 
 /**
@@ -101,16 +99,23 @@ export function initOutsideClickHandler(target, onClose, ignore = []) {
  * @param {Function} onClose - Callback for the outside click.
  */
 export function closeOnOutsideClick(insideElements, onClose) {
-  /**
-   * Closes on an outside click and removes itself afterwards.
-   * @param {MouseEvent} event - The click event.
-   */
-  function handleDocumentClick(event) {
-    if (isInsideAny(event.target, insideElements)) return;
-    onClose();
-    document.removeEventListener("click", handleDocumentClick);
-  }
-  document.addEventListener("click", handleDocumentClick);
+  const listening = new AbortController();
+  document.addEventListener("click", (event) => closeOnClickOutside(event, insideElements, onClose, listening), {
+    signal: listening.signal,
+  });
+}
+
+/**
+ * Calls onClose for a click outside of the given elements and removes the listener afterwards.
+ * @param {MouseEvent} event - The click event.
+ * @param {(HTMLElement|null)[]} insideElements - Elements that count as inside.
+ * @param {Function} onClose - Callback for the outside click.
+ * @param {AbortController} listening - Removes the click listener.
+ */
+function closeOnClickOutside(event, insideElements, onClose, listening) {
+  if (isInsideAny(event.target, insideElements)) return;
+  onClose?.();
+  listening.abort();
 }
 
 /**

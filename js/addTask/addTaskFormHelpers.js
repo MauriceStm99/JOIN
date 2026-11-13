@@ -1,9 +1,4 @@
-import {
-  toggleUrgentButtonOnClick,
-  toggleMediumButtonOnClick,
-  toggleLowButtonOnClick,
-  removeClickedFromPriorityButtons,
-} from "./addTaskPriorityButtons.js";
+import { removeClickedFromPriorityButtons } from "./addTaskPriorityButtons.js";
 import { initOutsideClickHandler } from "../core/utility.js";
 
 const CONTENT_LIMITS = {
@@ -137,10 +132,7 @@ function clearFormFields(selectBox) {
 function resetPriorityButtons() {
   removeClickedFromPriorityButtons();
   const mediumBtn = document.getElementById("priorityMediumBtn");
-  if (mediumBtn) {
-    mediumBtn.classList.add("clicked");
-    toggleMediumButtonOnClick(mediumBtn);
-  }
+  if (mediumBtn) mediumBtn.classList.add("clicked");
 }
 
 /**
@@ -149,33 +141,40 @@ function resetPriorityButtons() {
  */
 export function initPriorityButtons({ lowBtn, mediumBtn, urgentBtn, priorities, setPriority }) {
   const configs = [
-    { button: lowBtn, value: priorities.low, toggle: toggleLowButtonOnClick },
-    { button: mediumBtn, value: priorities.medium, toggle: toggleMediumButtonOnClick },
-    { button: urgentBtn, value: priorities.urgent, toggle: toggleUrgentButtonOnClick },
+    { button: lowBtn, value: priorities.low },
+    { button: mediumBtn, value: priorities.medium },
+    { button: urgentBtn, value: priorities.urgent },
   ];
   configs.forEach((config) => bindPriorityButton(config, setPriority));
   if (mediumBtn) {
     mediumBtn.classList.add("clicked");
-    toggleMediumButtonOnClick(mediumBtn);
     setPriority(priorities.medium);
   }
 }
 
 /**
  * Selects a priority when its button is clicked.
- * @param {{button: HTMLButtonElement, value: string, toggle: Function}} config - Button and its priority.
+ * @param {{button: HTMLButtonElement, value: string}} config - Button and its priority.
  * @param {Function} setPriority - Stores the selected priority.
  */
-function bindPriorityButton({ button, value, toggle }, setPriority) {
-  button?.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (button.classList.contains("clicked")) return;
-    setPriority(value);
-    removeClickedFromPriorityButtons();
-    button.classList.add("clicked");
-    toggle(button);
-  });
+function bindPriorityButton({ button, value }, setPriority) {
+  button?.addEventListener("click", (event) => selectPriorityButton(event, button, value, setPriority));
+}
+
+/**
+ * Marks the clicked priority button as selected and stores its priority.
+ * @param {MouseEvent} event - The click event.
+ * @param {HTMLButtonElement} button - The clicked button.
+ * @param {string} value - Its priority.
+ * @param {Function} setPriority - Stores the selected priority.
+ */
+function selectPriorityButton(event, button, value, setPriority) {
+  event.preventDefault();
+  event.stopPropagation();
+  if (button.classList.contains("clicked")) return;
+  setPriority(value);
+  removeClickedFromPriorityButtons();
+  button.classList.add("clicked");
 }
 
 /**
