@@ -8,9 +8,7 @@ const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const PASSWORD_RULES = [
   { pattern: /^[\s\S]{6,}$/, message: "Password must be at least 6 characters." },
-  { pattern: /[A-Z]/, message: "Password must contain a capital letter." },
   { pattern: /[a-z]/, message: "Password must contain a lowercase letter." },
-  { pattern: /[!@#$%^&*(),.?\":{}|<>]/, message: "Password must contain a special character." },
 ];
 
 const form = document.querySelector("form");
