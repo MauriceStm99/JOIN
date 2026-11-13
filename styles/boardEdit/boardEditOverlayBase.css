@@ -246,13 +246,50 @@
     opacity: 0.7;
 }
 
+/* The list grows with its subtasks, only the edit form scrolls. */
 .edit-subtasks-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-top: 12px;
-    max-height: 200px;
-    overflow-y: auto;
+}
+
+.edit-subtasks-list .subtask-label {
+    position: relative;
+    padding: 6px 8px;
+    line-height: 1.4;
+}
+
+.edit-subtasks-list .subtask-label-left {
+    flex: 1;
+    min-width: 0;
+    align-items: flex-start;
+}
+
+.edit-subtasks-list .subtask-label-left span {
+    overflow-wrap: anywhere;
+}
+
+/* The point keeps its size and sits in the middle of the first line. */
+.edit-subtasks-list .point {
+    flex-shrink: 0;
+    margin-top: calc(0.7em - 4px);
+}
+
+/* A long subtask may wrap while it is edited, the row grows instead of covering its neighbours. */
+.edit-subtasks-list .subtask-label-active {
+    height: auto !important;
+    min-height: 40px;
+}
+
+/* The buttons lie over the end of the line on hover, so the text can use the whole width. */
+.edit-subtasks-list .edit-delete-subtask-buttons {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    padding-left: 16px;
+    background: linear-gradient(to right, transparent, #E9E9E9 16px);
 }
 
 .subtask-label {
