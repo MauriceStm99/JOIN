@@ -74,13 +74,14 @@ body {
   margin-bottom: 0;
 }
 
+/* One message line is exactly as high as the empty slot, so nothing moves when a message appears. */
 .field-error {
   min-height: 18px;
   margin: 2px 0 8px;
   padding-left: 4px;
   color: red;
   font-size: 16px;
-  line-height: 1.2;
+  line-height: 18px;
 }
 
 .input-field input {
@@ -261,7 +262,6 @@ dialog.app-popup {
   }
 
   .field-error {
-    min-height: 16px;
     margin: 2px 0 4px;
     font-size: 16px;
   }
@@ -331,5 +331,19 @@ dialog.app-popup {
 @media (max-width: 680px) {
   footer {
     padding: 8px 20px;
+  }
+}
+
+/* Narrow phones: these messages need two lines there, so their slot keeps that space from the start. */
+@media (max-width: 395px) {
+  #passwordError {
+    min-height: 36px;
+  }
+}
+
+@media (max-width: 345px) {
+  #emailError,
+  #privacyError {
+    min-height: 36px;
   }
 }

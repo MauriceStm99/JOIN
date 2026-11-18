@@ -183,7 +183,7 @@ async function loginUser(email, password) {
     persistCurrentUser(user, "User");
     window.location.href = SUMMARY_PAGE;
   } catch (error) {
-    errorBox.textContent = "Error: " + error.message;
+    errorBox.textContent = error.message;
     showPopup(error.message || "Login failed.");
   }
 }
