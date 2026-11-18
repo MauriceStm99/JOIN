@@ -82,6 +82,7 @@
   background-color: var(--mainColor-default);
   border-radius: 50%;
   display: inline-block;
+  flex-shrink: 0;
   margin-right: 10px;
 }
 
@@ -98,6 +99,8 @@
   margin: 5px;
   gap: 8px;
   overflow: auto;
+  /* Keeps the space of one avatar row, so selecting a contact does not move the fields below. */
+  min-height: 42px;
   max-height: 70px;
 }
 

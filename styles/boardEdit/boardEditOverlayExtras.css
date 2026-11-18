@@ -109,6 +109,8 @@
     margin: 5px;
     gap: 8px;
     overflow: auto;
+    /* Keeps the space of one avatar row, so selecting a contact does not move the fields below. */
+    min-height: 32px;
     max-height: 72px;
 }
 
