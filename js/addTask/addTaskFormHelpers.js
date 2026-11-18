@@ -1,5 +1,8 @@
 import { removeClickedFromPriorityButtons } from "./addTaskPriorityButtons.js";
 import { initOutsideClickHandler } from "../core/utility.js";
+import { getDueDateError } from "../core/dueDate.js";
+
+const REQUIRED_HINT = "*This field is required";
 
 const CONTENT_LIMITS = {
   taskTitle: 80,
@@ -48,6 +51,30 @@ function markField(inputId, hintId, invalid) {
 }
 
 /**
+ * Returns the hint for the due date field.
+ * @param {string} dueDate - The due date as YYYY-MM-DD.
+ * @returns {string} The hint, empty if the due date is valid.
+ */
+function getDueDateHint(dueDate) {
+  if (!dueDate) return REQUIRED_HINT;
+  const error = getDueDateError(dueDate);
+  return error ? `*${error}` : "";
+}
+
+/**
+ * Marks the due date field as valid or invalid, the hint names the problem.
+ * @param {string} dueDate - The due date as YYYY-MM-DD.
+ * @returns {boolean} True if the due date is invalid.
+ */
+function markDueDateField(dueDate) {
+  const hintText = getDueDateHint(dueDate);
+  const hint = document.getElementById("taskDateHint");
+  if (hint && hintText) hint.textContent = hintText;
+  markField("taskDate", "taskDateHint", Boolean(hintText));
+  return Boolean(hintText);
+}
+
+/**
  * Sets the maximum length of several fields.
  * @param {Object<string, number>} limitsById - Maximum length per field id.
  */
@@ -73,9 +100,7 @@ export function initBlurValidation({ getTitle, getDueDate, getCategory }) {
   document.getElementById("taskTitle")?.addEventListener("blur", () => {
     markField("taskTitle", "taskTitleHint", !getTitle().trim());
   });
-  document.getElementById("taskDate")?.addEventListener("blur", () => {
-    markField("taskDate", "taskDateHint", !getDueDate());
-  });
+  document.getElementById("taskDate")?.addEventListener("blur", () => markDueDateField(getDueDate()));
   document.getElementById("categorySelect")?.addEventListener("blur", () => {
     markField("categorySelect", "categoryHint", !getCategory());
   });
@@ -88,10 +113,9 @@ export function initBlurValidation({ getTitle, getDueDate, getCategory }) {
  */
 export function validateTaskForm({ getTitle, getDueDate, getCategory }) {
   const titleInvalid = !getTitle().trim();
-  const dateInvalid = !getDueDate();
+  const dateInvalid = markDueDateField(getDueDate());
   const categoryInvalid = !getCategory();
   markField("taskTitle", "taskTitleHint", titleInvalid);
-  markField("taskDate", "taskDateHint", dateInvalid);
   markField("categorySelect", "categoryHint", categoryInvalid);
   return !(titleInvalid || dateInvalid || categoryInvalid);
 }

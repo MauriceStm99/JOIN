@@ -12,7 +12,7 @@
 }
 
 .subtask-buttons {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   height: 24px;
@@ -20,6 +20,10 @@
   right: 10px;
   top: 24px;
   transform: translateY(-50%);
+}
+
+.subtask-input-area:focus-within .subtask-buttons {
+  display: flex;
 }
 
 .subtask-label {

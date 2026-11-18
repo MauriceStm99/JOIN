@@ -1,4 +1,5 @@
 import { escapeHtml } from "../js/core/utility.js";
+import { getTodayISO, MAX_DUE_DATE } from "../js/core/dueDate.js";
 import { getSafeTask, CLOSE_ICON } from "./boardTasksTemplates.js";
 import { subtaskViewButtonsTemplate, subtaskEditButtonsTemplate } from "./addTaskTemplates.js";
 
@@ -20,18 +21,6 @@ const PRIORITY_ICONS = {
 const CHECK_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">
   <path d="M1 7L7 13L17 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`;
-
-/**
- * Returns today as YYYY-MM-DD in local time.
- * @returns {string} The date.
- */
-function getTodayISO() {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const day = String(today.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
 
 /**
  * Returns the earliest selectable due date, a due date in the past stays selectable.
@@ -105,7 +94,7 @@ function editDueDateTemplate(safeTask) {
   return `
         <div class="edit-form-group">
           <label for="editTaskDate-${safeTask.id}">Due date</label>
-          <input type="date" id="editTaskDate-${safeTask.id}" class="edit-form-input" value="${safeTask.dueDate}" min="${getMinDueDate(safeTask.dueDate)}">
+          <input type="date" id="editTaskDate-${safeTask.id}" class="edit-form-input" value="${safeTask.dueDate}" min="${getMinDueDate(safeTask.dueDate)}" max="${MAX_DUE_DATE}">
         </div>`;
 }
 

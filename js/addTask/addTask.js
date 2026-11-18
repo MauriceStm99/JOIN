@@ -16,6 +16,7 @@ import {
   resetAssignedContacts,
 } from "./addTaskContacts.js";
 import { showPopup, showBoardToast } from "../ui/feedback.js";
+import { applyDueDateRange } from "../core/dueDate.js";
 
 const PRIORITY = Object.freeze({
   LOW: "Low",
@@ -40,7 +41,7 @@ let selectedPriority = PRIORITY.MEDIUM;
  * Sets up the whole add task page.
  */
 async function initAddTaskPage() {
-  setMinimumDueDate();
+  applyDueDateRange(document.getElementById("taskDate"));
   const form = document.querySelector(".add-task-form");
   if (form) form.noValidate = true;
   initAssignedDropdown();
@@ -52,16 +53,6 @@ async function initAddTaskPage() {
   initSubtaskEventListeners();
   initPriorityButtons(getPriorityButtonConfig());
   await loadAddTaskContacts();
-}
-
-/**
- * Prevents due dates in the past.
- */
-function setMinimumDueDate() {
-  const dateInput = document.getElementById("taskDate");
-  if (dateInput) {
-    dateInput.min = new Date().toISOString().split("T")[0];
-  }
 }
 
 /**

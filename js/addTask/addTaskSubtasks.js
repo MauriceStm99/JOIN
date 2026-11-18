@@ -160,9 +160,18 @@ function addSubtaskOnEnter(event) {
 }
 
 /**
+ * Keeps the focus in the subtask field when its buttons are clicked,
+ * so the buttons, which are only shown while the field is active, stay visible.
+ */
+function keepSubtaskInputFocused() {
+  document.querySelector(".subtask-buttons").addEventListener("mousedown", (event) => event.preventDefault());
+}
+
+/**
  * Connects the add and remove buttons and the Enter key of the subtask field.
  */
 export function initSubtaskEventListeners() {
+  keepSubtaskInputFocused();
   document.getElementById("addSubtaskBtn").addEventListener("click", (event) => {
     event.preventDefault();
     addSubtaskFromInput();

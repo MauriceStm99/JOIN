@@ -1,6 +1,7 @@
 import { getTask, updateTask } from "../../firebase/firebaseTasks.js";
 import { editTaskFormTemplate } from "../../../templates/boardEditTemplates.js";
 import { showPopup } from "../../ui/feedback.js";
+import { getDueDateError } from "../../core/dueDate.js";
 import { updateTaskCard, getHiddenAssigneeIds } from "../boardRender.js";
 import { showTaskDetail } from "../boardDetail.js";
 import {
@@ -100,26 +101,21 @@ function initEditBlurValidation(taskId) {
   const titleInput = overlay.querySelector(`#editTaskTitle-${taskId}`);
   const dateInput = overlay.querySelector(`#editTaskDate-${taskId}`);
   titleInput?.addEventListener("blur", () => {
-    validateEditField(titleInput, titleInput.value.trim(), "Please enter a task title.");
+    validateEditField(titleInput, titleInput.value.trim() ? "" : "Please enter a task title.");
   });
   dateInput?.addEventListener("blur", () => {
-    validateEditField(dateInput, dateInput.value, "Please select a due date.");
+    validateEditField(dateInput, dateInput.value ? getDueDateError(dateInput.value, dateInput.min) : "Please select a due date.");
   });
 }
 
 /**
- * Marks an empty field red and shows a message.
+ * Marks an invalid field red and shows its error message.
  * @param {HTMLInputElement} input - The field.
- * @param {string} value - Its value.
- * @param {string} message - Message for an empty field.
+ * @param {string} error - The error message, empty if the field is valid.
  */
-function validateEditField(input, value, message) {
-  if (value) {
-    input.style.borderColor = "";
-    return;
-  }
-  input.style.borderColor = "red";
-  showPopup(message, "info");
+function validateEditField(input, error) {
+  input.style.borderColor = error ? "red" : "";
+  if (error) showPopup(error, "info");
 }
 
 /**
@@ -148,7 +144,7 @@ async function handleEditSubmit(event, taskId) {
 }
 
 /**
- * Checks that there is a title and that the due date is not before the minimum date.
+ * Checks that there is a title and that the due date has a four-digit year and is not in the past.
  * @param {string} taskId - Task id.
  * @returns {boolean} True if the task can be saved.
  */
@@ -159,8 +155,9 @@ function isEditFormValid(taskId) {
     return false;
   }
   const dateInput = overlay.querySelector(`#editTaskDate-${taskId}`);
-  if (dateInput?.value && dateInput.min && dateInput.value < dateInput.min) {
-    showPopup("The due date cannot be in the past.", "info");
+  const dateError = dateInput?.value ? getDueDateError(dateInput.value, dateInput.min) : "";
+  if (dateError) {
+    showPopup(dateError, "info");
     return false;
   }
   return true;
