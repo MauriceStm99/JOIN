@@ -135,7 +135,7 @@ function initSearch() {
   const searchInput = document.getElementById("searchInput");
   if (!searchInput) return;
   searchInput.addEventListener("input", (event) => {
-    filterTasks(event.target.value.toLowerCase());
+    filterTasks(event.target.value.trim().toLowerCase());
   });
 }
 

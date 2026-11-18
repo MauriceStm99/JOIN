@@ -190,7 +190,7 @@ async function saveEditedTask(taskId) {
 function collectEditFormData(taskId) {
   return {
     title: overlay.querySelector(`#editTaskTitle-${taskId}`)?.value.trim(),
-    description: overlay.querySelector(`#editTaskDescription-${taskId}`)?.value || "",
+    description: overlay.querySelector(`#editTaskDescription-${taskId}`)?.value.trim() || "",
     dueDate: overlay.querySelector(`#editTaskDate-${taskId}`)?.value || "",
     priority: getEditPriority(taskId),
     category: overlay.querySelector(`#editTaskCategory-${taskId}`)?.value || "No Category",

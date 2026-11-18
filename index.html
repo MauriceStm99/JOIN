@@ -44,7 +44,6 @@
               <img src="./assets/logIn&SignUp/mail.svg" alt="">
             </span>
           </div>
-          <div class="field-error" id="emailError"></div>
 
           <div class="input-field">
             <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Password">
@@ -52,9 +51,7 @@
               <img src="./assets/logIn&SignUp/lock.svg" id="passwordIconImg" alt="" role="button" tabindex="0" aria-label="Toggle password visibility">
             </span>
           </div>
-          <div class="field-error" id="passwordError"></div>
-
-          <div id="loginError" class="error-message"></div>
+          <div class="field-error" id="loginError" aria-live="polite"></div>
 
           <div class="btn-group">
             <button class="primary-btn" id="loginBtn">Log in</button>

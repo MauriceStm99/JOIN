@@ -6,7 +6,7 @@
 
 html, body {
   height: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   font-family: "Inter", sans-serif;
 }
 

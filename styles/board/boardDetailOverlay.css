@@ -36,10 +36,6 @@
     display: flex;
 }
 
-body:has(.overlay-edit.active) {
-    overflow: hidden;
-}
-
 /* The overlay cannot cover the reserved scrollbar space, so it gets the dimmed page color. */
 html:has(.overlay-edit.active) {
     background-color: #7b7c7c;

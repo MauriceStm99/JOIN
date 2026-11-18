@@ -10,16 +10,24 @@ const VISIBILITY_OFF_ICON = "./assets/logIn&SignUp/visibility_off.svg";
 const GUEST_PASSWORD = "Guest#Join2024!";
 const SUMMARY_PAGE = "./pages/app/summaryUser.html";
 const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const EMAIL_ERROR = "Please enter a valid email address.";
+const PASSWORD_ERROR = "Password must be at least 6 characters.";
 
 const emailInput = document.getElementById("emailInput");
 const passwordInput = document.getElementById("passwordInput");
 const loginBtn = document.getElementById("loginBtn");
 const loginGuest = document.getElementById("guestLoginBtn");
-const errorBox = document.getElementById("loginError");
-const emailError = document.getElementById("emailError");
-const passwordError = document.getElementById("passwordError");
+const loginError = document.getElementById("loginError");
 const form = document.querySelector("form");
 const passwordIconImg = document.getElementById("passwordIconImg");
+
+/**
+ * Shows a message below the password field, the only message of the login form.
+ * @param {string} message - The message, an empty string removes it.
+ */
+function showLoginError(message) {
+  loginError.textContent = message;
+}
 
 /**
  * Checks the format of an email address.
@@ -31,29 +39,29 @@ function isValidEmail(email) {
 }
 
 /**
- * Validates the email field and shows an error below it.
- * @returns {boolean} True if the email is valid.
+ * Checks whether the password has the minimum length.
+ * Spaces count like on the sign up page, because they are part of the password.
+ * @returns {boolean} True if it is long enough.
  */
-function validateEmailOnBlur() {
-  if (!isValidEmail(emailInput.value.trim())) {
-    emailError.textContent = "Please enter a valid email address.";
-    return false;
-  }
-  emailError.textContent = "";
-  return true;
+function isPasswordLongEnough() {
+  return passwordInput.value.length >= 6;
 }
 
 /**
- * Validates the password field and shows an error below it.
- * @returns {boolean} True if the password is long enough.
+ * Returns the first problem of the entered email and password.
+ * @returns {string} The message or an empty string.
+ */
+function getInputError() {
+  if (!isValidEmail(emailInput.value.trim())) return EMAIL_ERROR;
+  if (!isPasswordLongEnough()) return PASSWORD_ERROR;
+  return "";
+}
+
+/**
+ * Shows the password message when the field is left with a too short password.
  */
 function validatePasswordOnBlur() {
-  if (passwordInput.value.trim().length < 6) {
-    passwordError.textContent = "Password must be at least 6 characters.";
-    return false;
-  }
-  passwordError.textContent = "";
-  return true;
+  if (!isPasswordLongEnough()) showLoginError(PASSWORD_ERROR);
 }
 
 /**
@@ -117,7 +125,7 @@ async function handleGuestLogin(event) {
  * Shows the eye icon while a password is typed and the lock icon when the field is empty.
  */
 function handlePasswordInput() {
-  passwordError.textContent = "";
+  showLoginError("");
   if (passwordInput.value.length > 0) {
     passwordIconImg.src = VISIBILITY_ICON;
   } else {
@@ -150,25 +158,14 @@ function handleIconKeydown(event) {
 }
 
 /**
- * Removes all error messages of the login form.
- */
-function clearLoginErrors() {
-  errorBox.textContent = "";
-  emailError.textContent = "";
-  passwordError.textContent = "";
-}
-
-/**
- * Validates the form and logs the user in.
+ * Validates the form and logs the user in, a problem is shown below the password.
  * @param {MouseEvent} event - The click event.
  */
 async function handleLogin(event) {
   event.preventDefault();
-  clearLoginErrors();
-  if (!validateEmailOnBlur() || !validatePasswordOnBlur()) {
-    showPopup("Please check the highlighted login fields.", "info");
-    return;
-  }
+  const inputError = getInputError();
+  showLoginError(inputError);
+  if (inputError) return;
   await loginUser(emailInput.value.trim(), passwordInput.value);
 }
 
@@ -183,8 +180,7 @@ async function loginUser(email, password) {
     persistCurrentUser(user, "User");
     window.location.href = SUMMARY_PAGE;
   } catch (error) {
-    errorBox.textContent = error.message;
-    showPopup(error.message || "Login failed.");
+    showLoginError(error.message || "Login failed.");
   }
 }
 
@@ -211,9 +207,8 @@ function configureLoginForm() {
  */
 function initLogin() {
   configureLoginForm();
-  emailInput?.addEventListener("blur", validateEmailOnBlur);
   passwordInput?.addEventListener("blur", validatePasswordOnBlur);
-  emailInput?.addEventListener("input", () => (emailError.textContent = ""));
+  emailInput?.addEventListener("input", () => showLoginError(""));
   loginGuest?.addEventListener("click", handleGuestLogin);
   passwordInput?.addEventListener("input", handlePasswordInput);
   passwordIconImg?.addEventListener("click", togglePasswordVisibility);

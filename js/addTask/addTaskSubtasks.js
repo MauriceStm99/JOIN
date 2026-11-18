@@ -185,9 +185,9 @@ function toSubtask(span) {
 }
 
 /**
- * Reads all subtasks of the form.
+ * Reads all subtasks of the form, subtasks that are empty without their spaces are left out.
  * @returns {{text: string, completed: boolean}[]} The subtasks.
  */
 export function getSubtasksList() {
-  return [...document.querySelectorAll("#subtasksList span")].map(toSubtask);
+  return [...document.querySelectorAll("#subtasksList span")].map(toSubtask).filter((subtask) => subtask.text);
 }

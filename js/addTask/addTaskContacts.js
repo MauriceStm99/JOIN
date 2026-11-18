@@ -218,7 +218,7 @@ export function initAssignedDropdown() {
     event.stopPropagation();
     toggleDropdown(selectBox, checkboxList, selectArrow);
   });
-  selectBox.addEventListener("input", () => renderAssignableContacts(selectBox.value));
+  selectBox.addEventListener("input", () => renderAssignableContacts(selectBox.value.trim()));
 }
 
 /**

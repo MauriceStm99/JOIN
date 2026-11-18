@@ -108,19 +108,19 @@ function setSelectedPriority(value) {
 }
 
 /**
- * Reads the title.
+ * Reads the title without the spaces around it.
  * @returns {string} The title.
  */
 function getTitleTask() {
-  return document.getElementById("taskTitle").value;
+  return document.getElementById("taskTitle").value.trim();
 }
 
 /**
- * Reads the description.
+ * Reads the description without the spaces around it.
  * @returns {string} The description.
  */
 function getDescriptionTask() {
-  return document.getElementById("taskDescription").value;
+  return document.getElementById("taskDescription").value.trim();
 }
 
 /**
