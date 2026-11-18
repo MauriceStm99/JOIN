@@ -169,9 +169,13 @@
 .edit-subtask-buttons {
     position: absolute;
     right: 12px;
-    display: flex;
+    display: none;
     align-items: center;
     gap: 4px;
+}
+
+.edit-subtask-input-area:focus-within .edit-subtask-buttons {
+    display: flex;
 }
 
 .edit-subtask-btn {

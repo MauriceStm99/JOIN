@@ -10,6 +10,8 @@ import { wireBoardSubtask, removeLastSubtask } from "../boardSubtasks.js";
 
 const overlay = document.getElementById("taskDetailOverlay");
 
+const MAX_VISIBLE_EDIT_ASSIGNEES = 3;
+
 /**
  * Renders the contact checkboxes of the edit form, assigned contacts are checked.
  * @param {HTMLElement} listEl - The checkbox list.
@@ -58,15 +60,40 @@ function getCheckedValues(listEl) {
  * @param {HTMLElement|null} iconsEl - The avatar container.
  */
 function updateAssignedToSummary(listEl, selectedBox, iconsEl) {
-  const checkedIds = getCheckedValues(listEl);
   if (selectedBox) selectedBox.value = "";
-  if (!iconsEl) return;
-  iconsEl.innerHTML = "";
-  checkedIds.forEach((id) => {
-    const contact = returnContactById(id, getBoardContacts());
-    if (!contact) return;
-    iconsEl.insertAdjacentHTML("beforeend", assigneeAvatarTemplate(getInitials(contact.name), contact.color));
-  });
+  if (iconsEl) renderEditAssigneeAvatars(iconsEl, getCheckedValues(listEl));
+}
+
+/**
+ * Shows the avatars of the assigned contacts, after three avatars a "+n" badge shows all.
+ * The avatars stay in one row, so the fields below do not move.
+ * @param {HTMLElement} iconsEl - The avatar container.
+ * @param {string[]} contactIds - Ids of the assigned contacts.
+ * @param {boolean} [showAll] - True shows all avatars without a badge.
+ */
+function renderEditAssigneeAvatars(iconsEl, contactIds, showAll = false) {
+  const contacts = contactIds.map((id) => returnContactById(id, getBoardContacts())).filter(Boolean);
+  const visible = showAll ? contacts : contacts.slice(0, MAX_VISIBLE_EDIT_ASSIGNEES);
+  iconsEl.innerHTML = visible.map((contact) => assigneeAvatarTemplate(getInitials(contact.name), contact.color)).join("");
+  const remaining = contacts.length - visible.length;
+  if (remaining > 0) iconsEl.appendChild(createEditMoreBadge(iconsEl, contactIds, remaining));
+}
+
+/**
+ * Creates the "+n" badge that shows all avatars on click.
+ * @param {HTMLElement} iconsEl - The avatar container.
+ * @param {string[]} contactIds - Ids of the assigned contacts.
+ * @param {number} remaining - Number of hidden avatars.
+ * @returns {HTMLButtonElement} The badge.
+ */
+function createEditMoreBadge(iconsEl, contactIds, remaining) {
+  const badge = document.createElement("button");
+  badge.type = "button";
+  badge.className = "assignee-avatar assignee-more-badge";
+  badge.textContent = `+${remaining}`;
+  badge.setAttribute("aria-label", `Show all ${contactIds.length} assigned contacts`);
+  badge.addEventListener("click", () => renderEditAssigneeAvatars(iconsEl, contactIds, true));
+  return badge;
 }
 
 /**
@@ -151,11 +178,13 @@ function appendEditSubtask(list, text, completed = false) {
 
 /**
  * Connects the add and remove buttons of the subtask field.
+ * A click on them keeps the focus in the field, so the buttons, which are only shown while the field is active, stay visible.
  * @param {string} taskId - Task id.
  */
 export function initEditSubtaskButtons(taskId) {
   const input = overlay.querySelector(`#editSubtasks-${taskId}`);
   const list = overlay.querySelector(`#editSubtasksList-${taskId}`);
+  input?.parentElement.querySelector(".edit-subtask-buttons")?.addEventListener("mousedown", (event) => event.preventDefault());
   overlay.querySelector(`#editAddSubtaskBtn-${taskId}`)?.addEventListener("click", (event) => {
     event.preventDefault();
     addEditSubtaskFromInput(input, list);
