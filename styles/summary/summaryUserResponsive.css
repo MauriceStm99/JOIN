@@ -467,8 +467,9 @@
     margin-bottom: 16px;
   }
 
+  /* At least 360px, so the tiles are not squeezed in very low windows like a phone held sideways, the page scrolls instead. */
   .summary-metrics {
-    height: min(560px, calc(100vh - 232px));
+    height: clamp(360px, calc(100vh - 232px), 560px);
     gap: 16px;
   }
 

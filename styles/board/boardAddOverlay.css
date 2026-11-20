@@ -309,6 +309,22 @@
     padding: 0;
 }
 
+/* Low notebook windows: less space above the form and below the buttons, so more of the form is visible. */
+@media (max-height: 800px) {
+    .overlay-add-task-card {
+        padding-top: 40px;
+    }
+
+    .add-task-title {
+        font-size: 47px !important;
+        margin-bottom: 16px !important;
+    }
+
+    .add-task-actions {
+        padding-bottom: 24px;
+    }
+}
+
 @media (max-width: 1190px) {
     .overlay-add-task-card {
         margin: 20px;
