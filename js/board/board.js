@@ -6,6 +6,12 @@ import { checkColumnVisibility } from "./boardColumns.js";
 import { handleTaskCardClick, closeOverlayOnBtn } from "./boardDetail.js";
 import { initDragAndDrop } from "./dragDrop/boardDragDrop.js";
 import { openEditTaskOverlay, closeEditOverlay } from "./editTask/boardEditTask.js";
+import {
+  initAddTaskOverlay,
+  openAddTaskOverlay,
+  closeAddTaskOverlay,
+  populateOverlayContacts,
+} from "./addOverlay/boardAddOverlay.js";
 
 const overlay = document.getElementById("taskDetailOverlay");
 
@@ -14,6 +20,7 @@ const overlay = document.getElementById("taskDetailOverlay");
  */
 async function initBoard() {
   initBoardInteractions();
+  initAddTaskOverlay();
   try {
     const [tasksResult, contactsResult] = await Promise.allSettled([getAllTasks(), getContacts()]);
     applyContactsResult(contactsResult);
@@ -53,6 +60,7 @@ function initBoardInteractions() {
 function applyContactsResult(result) {
   if (result.status === "fulfilled") {
     setBoardContacts(result.value);
+    populateOverlayContacts();
   } else {
     setBoardContacts([]);
     showPopup("Contacts could not be loaded for the board.", "info");
@@ -109,11 +117,15 @@ function initEscapeKeyClose() {
 }
 
 /**
- * Closes the edit form or the detail view, in this order.
+ * Closes the add overlay, the edit form or the detail view, in this order.
  * @param {KeyboardEvent} event - The keydown event.
  */
 function handleEscapeKey(event) {
   if (event.key !== "Escape") return;
+  if (document.getElementById("addTaskOverlay")?.classList.contains("active")) {
+    closeAddTaskOverlay();
+    return;
+  }
   if (!overlay?.classList.contains("active")) return;
   if (overlay.querySelector(".edit-overlay-card")) {
     closeEditOverlay();
@@ -175,13 +187,5 @@ function cardMatchesSearch(card, searchText) {
   return searchText === "" || title.includes(searchText) || description.includes(searchText);
 }
 
-/**
- * Opens the add task page for a column.
- * @param {string} status - Column of the new task.
- */
-function openAddTaskPage(status) {
-  window.location.href = `addTask.html?status=${encodeURIComponent(status)}`;
-}
-
-window.openAddTaskPage = openAddTaskPage;
+window.openAddTaskOverlay = openAddTaskOverlay;
 document.addEventListener("DOMContentLoaded", initBoard);

@@ -101,9 +101,13 @@
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    display: flex;
+    display: none;
     align-items: center;
     gap: 8px;
+}
+
+.subtask-input-area:focus-within .subtask-buttons {
+    display: flex;
 }
 
 .subtask-add-button-size,
@@ -172,6 +176,7 @@
     background-color: var(--mainColor-default);
     border-radius: 50%;
     display: inline-block;
+    flex-shrink: 0;
 }
 
 .edit-delete-subtask-buttons {

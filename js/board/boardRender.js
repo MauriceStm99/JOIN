@@ -7,7 +7,7 @@ import { getSubtasksCompletionState } from "../firebase/firebaseTasks.js";
 import { getInitials, returnContactById } from "../core/utility.js";
 import { showPopup } from "../ui/feedback.js";
 import { attachDragHandlers } from "./dragDrop/boardDragDrop.js";
-import { getColumnForProgress } from "./boardColumns.js";
+import { getColumnForProgress, checkColumnVisibility } from "./boardColumns.js";
 
 const MAX_VISIBLE_AVATARS = 3;
 
@@ -138,4 +138,19 @@ export async function updateTaskCard(taskId, updatedTask) {
   newCard.querySelector(".task-assignees").innerHTML = "";
   addAssigneeAvatar(updatedTask);
   attachDragHandlers(newCard);
+}
+
+/**
+ * Adds a newly created task to its column, unknown columns go to "To do".
+ * @param {Object} task - The new task including its id.
+ */
+export function appendNewTaskToBoard(task) {
+  const column = getColumnForProgress(task.progress) || getColumnForProgress("toDo");
+  if (!column) return;
+  column.insertAdjacentHTML("beforeend", taskCardTemplate(task));
+  changeSubtaskProgressbar(task);
+  addAssigneeAvatar(task);
+  const newCard = document.getElementById(`task-card-${task.id}`);
+  if (newCard) attachDragHandlers(newCard);
+  checkColumnVisibility();
 }

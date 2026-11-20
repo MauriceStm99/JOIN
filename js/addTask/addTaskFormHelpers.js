@@ -62,15 +62,17 @@ function getDueDateHint(dueDate) {
 }
 
 /**
- * Marks the due date field as valid or invalid, the hint names the problem.
+ * Marks a due date field as valid or invalid, the hint names the problem.
  * @param {string} dueDate - The due date as YYYY-MM-DD.
+ * @param {string} [inputId] - Id of the date field.
+ * @param {string} [hintId] - Id of its hint.
  * @returns {boolean} True if the due date is invalid.
  */
-function markDueDateField(dueDate) {
+export function markDueDateField(dueDate, inputId = "taskDate", hintId = "taskDateHint") {
   const hintText = getDueDateHint(dueDate);
-  const hint = document.getElementById("taskDateHint");
+  const hint = document.getElementById(hintId);
   if (hint && hintText) hint.textContent = hintText;
-  markField("taskDate", "taskDateHint", Boolean(hintText));
+  markField(inputId, hintId, Boolean(hintText));
   return Boolean(hintText);
 }
 
