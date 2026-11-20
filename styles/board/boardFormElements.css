@@ -133,9 +133,9 @@
     color: #0066ff;
 }
 
+/* Fixed height like on the add task page, new subtasks scroll instead of moving the fields below. */
 .subtasks-list {
-    min-height: 0;
-    max-height: 200px;
+    height: 150px;
     overflow-y: auto;
     margin-top: 8px;
     display: flex;

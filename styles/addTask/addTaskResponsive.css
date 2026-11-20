@@ -161,11 +161,6 @@
     left: auto;
   }
 
-  .subtasks-list {
-    height: auto;
-    max-height: 200px;
-  }
-
   .mobile-nav {
     position: fixed;
     bottom: 0;

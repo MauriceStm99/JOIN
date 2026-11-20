@@ -140,12 +140,12 @@ function finishOverlayTask(newTask) {
 }
 
 /**
- * Reads the value of a field of the overlay.
+ * Reads the value of a field of the overlay without the spaces around it.
  * @param {string} id - Id of the field.
  * @returns {string} The value or an empty string.
  */
 function getOverlayValue(id) {
-  return document.getElementById(id)?.value || "";
+  return document.getElementById(id)?.value.trim() || "";
 }
 
 /**
