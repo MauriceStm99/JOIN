@@ -14,11 +14,24 @@ const overlay = document.getElementById("taskDetailOverlay");
  */
 async function initBoard() {
   initBoardInteractions();
-  const [tasksResult, contactsResult] = await Promise.allSettled([getAllTasks(), getContacts()]);
-  applyContactsResult(contactsResult);
-  applyTasksResult(tasksResult);
-  initDragAndDrop();
-  checkColumnVisibility();
+  try {
+    const [tasksResult, contactsResult] = await Promise.allSettled([getAllTasks(), getContacts()]);
+    applyContactsResult(contactsResult);
+    applyTasksResult(tasksResult);
+    initDragAndDrop();
+    checkColumnVisibility();
+  } finally {
+    showBoardColumns();
+  }
+}
+
+/**
+ * Shows the cards and "No tasks" notes, they stay hidden while the tasks load so the board does not flash empty.
+ */
+function showBoardColumns() {
+  const board = document.querySelector(".kanban-board");
+  board?.classList.remove("is-loading");
+  board?.removeAttribute("aria-busy");
 }
 
 /**

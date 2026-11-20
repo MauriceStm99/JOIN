@@ -212,7 +212,13 @@ html {
     height: 100%;
     border: 2px solid transparent;
     border-radius: 24px;
-    transition: background-color 0.25s ease, border-color 0.25s ease, padding 0.2s ease;
+    transition: background-color 0.25s ease, border-color 0.25s ease, padding 0.2s ease, opacity 0.15s ease-in;
+}
+
+/* Cards and "No tasks" notes stay hidden until the tasks are loaded, so the board does not flash empty. */
+.kanban-board.is-loading .tasks-container {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .tasks-container.dragover-highlight {
