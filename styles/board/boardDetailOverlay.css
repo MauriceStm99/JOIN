@@ -129,6 +129,8 @@ html:has(.overlay-edit.active) {
     margin: 0 0 16px 0;
     line-height: 1.1;
     margin-bottom: 24px;
+    /* Long words and links break instead of sticking out of the card. */
+    overflow-wrap: anywhere;
 }
 
 .overlay-description {
@@ -138,6 +140,7 @@ html:has(.overlay-edit.active) {
     color: #000000;
     margin-bottom: 24px;
     line-height: 1.4;
+    overflow-wrap: anywhere;
 }
 
 .date-and-priority-section {
